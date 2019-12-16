@@ -2,8 +2,10 @@ package com.savannah.service.impl;
 
 import com.savannah.dao.UserInfoMapper;
 import com.savannah.dao.UserPwdMapper;
+import com.savannah.dao.UserRoleMapper;
 import com.savannah.dataobject.UserInfoDO;
 import com.savannah.dataobject.UserPwdDO;
+import com.savannah.dataobject.UserRoleDO;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.UserService;
@@ -27,6 +29,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserPwdMapper userPwdMapper;
 
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     public UserServiceImpl(UserInfoMapper userInfoMapper) {
         this.userInfoMapper = userInfoMapper;
     }
@@ -38,7 +42,8 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         UserPwdDO userPwdDO = userPwdMapper.selectByUserId(userInfoDO.getId());
-        return convertFromDO(userInfoDO,userPwdDO);
+        UserRoleDO userRoleDO = userRoleMapper.selectByUserId(userInfoDO.getId());
+        return convertFromDO(userInfoDO,userPwdDO,userRoleDO);
     }
 
     @Override
@@ -66,21 +71,12 @@ public class UserServiceImpl implements UserService {
             throw new ReturnException(EmReturnError.USER_LOGIN_FAIL);
         }
         UserPwdDO userPwdDO = userPwdMapper.selectByUserId(userInfoDO.getId());
-        UserDTO userDTO = convertFromDO(userInfoDO,userPwdDO);
+        UserRoleDO userRoleDO = userRoleMapper.selectByUserId(userInfoDO.getId());
+        UserDTO userDTO = convertFromDO(userInfoDO,userPwdDO,userRoleDO);
         if (!StringUtils.equals(pwd, userDTO.getPwd())) {
             throw new ReturnException(EmReturnError.USER_LOGIN_FAIL);
         }
         return userDTO;
-    }
-
-    @Override
-    public String validateLogin(String email) throws ReturnException {
-        UserInfoDO userInfoDO = userInfoMapper.selectByEmail(email);
-        if (userInfoDO == null) {
-            throw new ReturnException(EmReturnError.USER_LOGIN_FAIL);
-        }
-        UserPwdDO userPwdDO = userPwdMapper.selectByUserId(userInfoDO.getId());
-        return userPwdDO.getEncryptedPwd();
     }
 
     private UserPwdDO convertPwdFromDTO(UserDTO userDTO) {
@@ -102,7 +98,7 @@ public class UserServiceImpl implements UserService {
         return userInfoDO;
     }
 
-    private UserDTO convertFromDO(UserInfoDO userInfoDO, UserPwdDO userPwdDO){
+    private UserDTO convertFromDO(UserInfoDO userInfoDO, UserPwdDO userPwdDO, UserRoleDO userRoleDO) {
         if (userInfoDO == null) {
             return null;
         }
@@ -110,6 +106,9 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userInfoDO, userDTO);
         if (userPwdDO != null) {
             userDTO.setPwd(userPwdDO.getEncryptedPwd());
+        }
+        if (userRoleDO != null) {
+            userDTO.setRole(userRoleDO.getRole());
         }
         return userDTO;
     }

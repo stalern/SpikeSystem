@@ -30,11 +30,4 @@ public interface UserService {
      * @throws ReturnException 账号或密码错误
      */
     UserDTO validateLogin(String email, String pwd) throws ReturnException;
-
-    /**
-     * 通过shiro核实登录
-     * @param email 邮箱
-     * @return 密码
-     */
-    String validateLogin(String email) throws ReturnException;
 }

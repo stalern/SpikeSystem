@@ -1,6 +1,5 @@
 package com.savannah.service.model;
 
-
 import com.savannah.util.validator.IsEmail;
 
 import javax.validation.constraints.Max;
@@ -33,6 +32,13 @@ public class UserDTO {
 
     @NotBlank(message = "密码不能为空")
     private String pwd;
+
+    /**
+     * 用户的商品，购物车
+     */
+    private ItemDTO itemDTO;
+
+    private String role;
 
     public Integer getId() {
         return id;
@@ -82,6 +88,22 @@ public class UserDTO {
         this.pwd = pwd;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public ItemDTO getItemDTO() {
+        return itemDTO;
+    }
+
+    public void setItemDTO(ItemDTO itemDTO) {
+        this.itemDTO = itemDTO;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -91,6 +113,8 @@ public class UserDTO {
                 ", age=" + age +
                 ", email='" + email + '\'' +
                 ", pwd='" + pwd + '\'' +
+                ", itemDTO=" + itemDTO +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

@@ -35,6 +35,9 @@ public class GlobalExceptionHandler{
         }else if(ex instanceof NoHandlerFoundException){
             responseData.put("errCode",EmReturnError.UNKNOWN_ERROR.getErrCode());
             responseData.put("errMsg","没有找到对应的访问路径");
+        }else if (ex instanceof IllegalArgumentException) {
+            responseData.put("errCode",EmReturnError.PARAMETER_VALIDATION_ERROR.getErrCode());
+            responseData.put("errMsg","输入参数不完整");
         }else{
             responseData.put("errCode", EmReturnError.UNKNOWN_ERROR.getErrCode());
             responseData.put("errMsg",EmReturnError.UNKNOWN_ERROR.getErrMsg());

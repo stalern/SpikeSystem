@@ -6,6 +6,7 @@ import com.savannah.error.ReturnException;
 import com.savannah.response.ReturnType;
 import com.savannah.service.UserService;
 import com.savannah.service.model.UserDTO;
+import com.savannah.util.validator.IsEmail;
 import com.savannah.util.validator.ValidationResult;
 import com.savannah.util.validator.ValidatorImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +23,7 @@ import java.util.Random;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(allowCredentials="true", allowedHeaders = "*")
-public class UserController extends BaseController {
+public class UserController {
 
     private final UserService userService;
     private final HttpServletRequest httpServletRequest;
@@ -56,8 +57,12 @@ public class UserController extends BaseController {
      * @throws ReturnException 用户名不存在或密码错误
      */
     @PostMapping("/login")
-    public ReturnType login(String email, String pwd) throws ReturnException {
+    public ReturnType login(@IsEmail String email, String pwd) throws ReturnException {
 
+        ValidationResult result =  validator.validate(email);
+        if(result.isHasErrors()){
+            throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
+        }
         // 入参校验
         if(StringUtils.isEmpty(email)|| StringUtils.isEmpty(email)){
             throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR);
@@ -78,7 +83,12 @@ public class UserController extends BaseController {
      * @return ok
      */
     @GetMapping("/getOtp/{email}")
-    public ReturnType getOtp(@PathVariable("email")String email) {
+    public ReturnType getOtp(@IsEmail @PathVariable("email")String email) throws ReturnException {
+
+        ValidationResult result =  validator.validate(email);
+        if(result.isHasErrors()){
+            throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
+        }
         Random random = new Random();
         String optCode = String.valueOf(random.nextInt(999999) + 1000);
         // 使用HttpSession将opt和email关联
@@ -90,11 +100,6 @@ public class UserController extends BaseController {
 
     @PostMapping(value = "/register/{otpCode}")
     public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode) throws ReturnException {
-
-        ValidationResult result =  validator.validate(userDTO);
-        if(result.isHasErrors()){
-            throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
-        }
 
         String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(userDTO.getEmail());
         if (! StringUtils.equals(optCode, inSessionOtpCode)){

@@ -1,5 +1,7 @@
 package com.savannah.controller;
 
+import com.savannah.util.auth.Auth;
+import com.savannah.util.auth.Group;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +17,7 @@ public class TestControl {
         return "login";
     }
     @RequestMapping("/index")
+    @Auth(Group.BUYER)
     public String index(){
         return "index";
     }

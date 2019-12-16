@@ -21,6 +21,11 @@ public class ItemDTO {
     private BigDecimal price;
 
     /**
+     * 商品分类
+     */
+    private String category;
+
+    /**
      * 商品库存
      */
     private Integer stock;
@@ -94,5 +99,27 @@ public class ItemDTO {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", stock=" + stock +
+                ", description='" + description + '\'' +
+                ", sales=" + sales +
+                ", imgUrl='" + imgUrl + '\'' +
+                '}';
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

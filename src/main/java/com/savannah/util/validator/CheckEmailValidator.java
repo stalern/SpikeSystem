@@ -1,6 +1,7 @@
 package com.savannah.util.validator;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -10,6 +11,7 @@ import javax.validation.ConstraintValidatorContext;
  * @author stalern
  * @date 2019/12/15~19:46
  */
+@Component
 public class CheckEmailValidator implements ConstraintValidator<IsEmail, String> {
 
    @Override

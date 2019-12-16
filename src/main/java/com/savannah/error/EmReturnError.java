@@ -20,7 +20,9 @@ public enum EmReturnError implements ReturnError {
      * 10000开头为用户相关信息错误定义
       */
     USER_NOT_EXIST(10001, "用户不存在"),
-    USER_LOGIN_FAIL(10002,"用户登录失败");
+    USER_LOGIN_FAIL(10002,"用户登录失败"),
+    USER_NOT_LOGIN(10003,"用户未登陆"),
+    USER_AUTH_DENIES(10004,"用户权限不够");
 
 
     private int errCode;
