@@ -1,6 +1,13 @@
 package com.savannah.service.model;
 
 
+import com.savannah.util.validator.IsEmail;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * @author stalern
  * @date 2019/12/09~21:36
@@ -8,14 +15,23 @@ package com.savannah.service.model;
 public class UserDTO {
     private Integer id;
 
+    @NotBlank(message = "用户名不能为空")
     private String name;
 
+    @NotNull(message = "性别不能不填写")
+    @Min(value = 0,message = "性别可能为女")
+    @Max(value = 1,message = "性别可能为男")
     private Byte gender;
 
+    @NotNull(message = "年龄不能不填写")
+    @Min(value = 0,message = "年龄必须大于0岁")
+    @Max(value = 150,message = "年龄必须小于150岁")
     private Byte age;
 
+    @IsEmail(message = "邮箱格式不符合")
     private String email;
 
+    @NotBlank(message = "密码不能为空")
     private String pwd;
 
     public Integer getId() {

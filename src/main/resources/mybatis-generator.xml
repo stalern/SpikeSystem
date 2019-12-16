@@ -47,11 +47,25 @@
 <!--        <table tableName="order_info"  domainObjectName="OrderInfo" enableCountByExample="false"-->
 <!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
 <!--               enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="promo_info"  domainObjectName="PromoInfo" enableCountByExample="false"
+<!--        <table tableName="promo_info"  domainObjectName="PromoInfo" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+<!--        <table tableName="promo_item"  domainObjectName="PromoItem" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="role_info"  domainObjectName="RoleInfo" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="promo_item"  domainObjectName="PromoItem" enableCountByExample="false"
+        <table tableName="perm_info"  domainObjectName="PermInfo" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="user_role"  domainObjectName="UserRole" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="role_perm"  domainObjectName="RolePerm" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"></table>
+
+
     </context>
 </generatorConfiguration>

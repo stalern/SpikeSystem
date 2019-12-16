@@ -6,6 +6,8 @@ import com.savannah.error.ReturnException;
 import com.savannah.response.ReturnType;
 import com.savannah.service.UserService;
 import com.savannah.service.model.UserDTO;
+import com.savannah.util.validator.ValidationResult;
+import com.savannah.util.validator.ValidatorImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +26,12 @@ public class UserController extends BaseController {
 
     private final UserService userService;
     private final HttpServletRequest httpServletRequest;
+    private final ValidatorImpl validator;
 
-    public UserController(UserService userService, HttpServletRequest httpServletRequest) {
+    public UserController(UserService userService, HttpServletRequest httpServletRequest, ValidatorImpl validator) {
         this.userService = userService;
         this.httpServletRequest = httpServletRequest;
+        this.validator = validator;
     }
 
     /**
@@ -86,6 +90,12 @@ public class UserController extends BaseController {
 
     @PostMapping(value = "/register/{otpCode}")
     public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode) throws ReturnException {
+
+        ValidationResult result =  validator.validate(userDTO);
+        if(result.isHasErrors()){
+            throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
+        }
+
         String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(userDTO.getEmail());
         if (! StringUtils.equals(optCode, inSessionOtpCode)){
             throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR, "短信验证码不符合");

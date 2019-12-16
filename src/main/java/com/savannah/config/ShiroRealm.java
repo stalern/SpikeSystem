@@ -1,9 +1,9 @@
 package com.savannah.config;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import com.savannah.dataobject.UserInfoDO;
+import com.savannah.error.ReturnException;
+import com.savannah.service.UserService;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -24,6 +24,9 @@ public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private SessionDAO sessionDAO;
+
+    @Autowired
+    private UserService userService;
     /**
      * 授权
      * @param principalCollection 权限集合
@@ -43,15 +46,16 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
-        Collection<Session> sessions = sessionDAO.getActiveSessions();
-        for (Session session : sessions) {
-            String loginUser = String.valueOf(session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY));
-            if (loginUser.equals(loginUser)){
-                session.setTimeout(0);
-                break;
-            }
+        String email = (String) authenticationToken.getPrincipal();
+        System.out.println(authenticationToken.getCredentials());
+
+        String pwd = null;
+        try {
+            pwd = userService.validateLogin(email);
+        } catch (ReturnException e) {
+            e.printStackTrace();
         }
 
-        return new SimpleAuthenticationInfo();
+        return new SimpleAuthenticationInfo(email,pwd,getName());
     }
 }

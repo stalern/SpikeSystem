@@ -16,10 +16,13 @@ import java.util.Map;
 
 /**
  * shiro 配置类
+ * Apache Shiro核心通过Filter实现
+ * 就好像SpringMvc通过DispatchServlet来主控制一样
+ * 使用Filter一般是通过URL规则来进行过滤和权限校验
  * @author stalern
  * @date 2019/12/10~13:37
  */
-// @Configuration
+@Configuration
 public class ShiroConfig {
     /**
      * ShiroFilterFactoryBean 处理拦截资源文件问题。

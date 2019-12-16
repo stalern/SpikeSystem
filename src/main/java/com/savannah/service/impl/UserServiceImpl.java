@@ -73,6 +73,16 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
+    @Override
+    public String validateLogin(String email) throws ReturnException {
+        UserInfoDO userInfoDO = userInfoMapper.selectByEmail(email);
+        if (userInfoDO == null) {
+            throw new ReturnException(EmReturnError.USER_LOGIN_FAIL);
+        }
+        UserPwdDO userPwdDO = userPwdMapper.selectByUserId(userInfoDO.getId());
+        return userPwdDO.getEncryptedPwd();
+    }
+
     private UserPwdDO convertPwdFromDTO(UserDTO userDTO) {
         if (userDTO == null) {
             return null;
