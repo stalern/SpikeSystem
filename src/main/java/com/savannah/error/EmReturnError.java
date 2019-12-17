@@ -22,7 +22,12 @@ public enum EmReturnError implements ReturnError {
     USER_NOT_EXIST(10001, "用户不存在"),
     USER_LOGIN_FAIL(10002,"用户登录失败"),
     USER_NOT_LOGIN(10003,"用户未登陆"),
-    USER_AUTH_DENIES(10004,"用户权限不够");
+    USER_AUTH_DENIES(10004,"用户权限不够"),
+    /**
+     * 20000开头为商品相关
+     */
+    ITEM_NOT_EXIT(20001,"商品不存在"),
+    STOCK_NOT_ENOUGH(20001,"库存不够");
 
 
     private int errCode;

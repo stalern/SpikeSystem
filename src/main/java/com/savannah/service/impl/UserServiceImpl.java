@@ -1,5 +1,7 @@
 package com.savannah.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.savannah.controller.vo.MyPage;
 import com.savannah.dao.UserInfoMapper;
 import com.savannah.dao.UserPwdMapper;
 import com.savannah.dao.UserRoleMapper;
@@ -12,10 +14,11 @@ import com.savannah.service.UserService;
 import com.savannah.service.model.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author stalern
@@ -25,14 +28,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserInfoMapper userInfoMapper;
+    private final UserPwdMapper userPwdMapper;
+    private final UserRoleMapper userRoleMapper;
 
-    @Autowired
-    private UserPwdMapper userPwdMapper;
-
-    @Autowired
-    private UserRoleMapper userRoleMapper;
-    public UserServiceImpl(UserInfoMapper userInfoMapper) {
+    public UserServiceImpl(UserInfoMapper userInfoMapper, UserPwdMapper userPwdMapper, UserRoleMapper userRoleMapper) {
         this.userInfoMapper = userInfoMapper;
+        this.userPwdMapper = userPwdMapper;
+        this.userRoleMapper = userRoleMapper;
+    }
+
+    @Override
+    public List<UserDTO> listUser(MyPage myPages) {
+        PageHelper.startPage(myPages.getPage(),myPages.getSize());
+        return userInfoMapper.listUserInfo();
     }
 
     @Override
@@ -62,6 +70,8 @@ public class UserServiceImpl implements UserService {
         userDTO.setId(userInfoDO.getId());
         UserPwdDO userPwdDO = convertPwdFromDTO(userDTO);
         userPwdMapper.insertSelective(userPwdDO);
+        UserRoleDO userRoleDO = convertRoleFromDTO(userDTO);
+        userRoleMapper.insertSelective(userRoleDO);
     }
 
     @Override
@@ -77,6 +87,13 @@ public class UserServiceImpl implements UserService {
             throw new ReturnException(EmReturnError.USER_LOGIN_FAIL);
         }
         return userDTO;
+    }
+
+    private UserRoleDO convertRoleFromDTO(UserDTO userDTO) {
+        UserRoleDO userRoleDO = new UserRoleDO();
+        userRoleDO.setRole(userDTO.getRole());
+        userRoleDO.setUserId(userDTO.getId());
+        return userRoleDO;
     }
 
     private UserPwdDO convertPwdFromDTO(UserDTO userDTO) {

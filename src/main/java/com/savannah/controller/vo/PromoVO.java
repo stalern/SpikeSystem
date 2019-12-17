@@ -1,15 +1,15 @@
-package com.savannah.service.model;
+package com.savannah.controller.vo;
 
 import org.joda.time.DateTime;
 
-import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 
 /**
+ * 秒杀活动模型
  * @author stalern
- * @date 2019/12/17~19:44
+ * @date 2019/12/09~21:59
  */
-public class PromoDTO {
+public class PromoVO {
     private Integer id;
 
     /**
@@ -28,10 +28,10 @@ public class PromoDTO {
     private DateTime endDate;
 
     /**
-     * 秒杀商品的id和活动时的价格
+     * 秒杀商品的id
      * 一个秒杀活动可以包含多个商品
      */
-    private Map<Integer, BigDecimal> promoPrice;
+    private List<Integer> itemIds;
 
     public Integer getId() {
         return id;
@@ -65,12 +65,12 @@ public class PromoDTO {
         this.endDate = endDate;
     }
 
-    public Map<Integer, BigDecimal> getPromoPrice() {
-        return promoPrice;
+    public List<Integer> getItemIds() {
+        return itemIds;
     }
 
-    public void setPromoPrice(Map<Integer, BigDecimal> promoPrice) {
-        this.promoPrice = promoPrice;
+    public void setItemIds(List<Integer> itemIds) {
+        this.itemIds = itemIds;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class PromoDTO {
                 ", promoName='" + promoName + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", promoPrice=" + promoPrice +
+                ", itemIds=" + itemIds +
                 '}';
     }
 }

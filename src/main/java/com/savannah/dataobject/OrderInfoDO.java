@@ -13,6 +13,9 @@ public class OrderInfoDO {
 
     private Integer itemId;
 
+    /**
+     * 总价格
+     */
     private BigDecimal orderPrice;
 
     private Integer amount;

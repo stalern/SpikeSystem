@@ -10,6 +10,7 @@ public class UserVO {
     private Byte gender;
     private Byte age;
     private String email;
+    private String role;
 
     public Integer getId() {
         return id;
@@ -43,12 +44,20 @@ public class UserVO {
         this.age = age;
     }
 
-    public String getemail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setemail(String email) {
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
@@ -59,6 +68,7 @@ public class UserVO {
                 ", gender=" + gender +
                 ", age=" + age +
                 ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

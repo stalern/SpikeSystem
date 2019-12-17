@@ -1,5 +1,6 @@
 package com.savannah.service.model;
 
+import com.savannah.controller.vo.ItemVO;
 import com.savannah.util.validator.IsEmail;
 
 import javax.validation.constraints.Max;
@@ -36,7 +37,7 @@ public class UserDTO {
     /**
      * 用户的商品，购物车
      */
-    private ItemDTO itemDTO;
+    private ItemVO itemDTO;
 
     private String role;
 
@@ -96,11 +97,11 @@ public class UserDTO {
         this.role = role;
     }
 
-    public ItemDTO getItemDTO() {
+    public ItemVO getItemDTO() {
         return itemDTO;
     }
 
-    public void setItemDTO(ItemDTO itemDTO) {
+    public void setItemDTO(ItemVO itemDTO) {
         this.itemDTO = itemDTO;
     }
 

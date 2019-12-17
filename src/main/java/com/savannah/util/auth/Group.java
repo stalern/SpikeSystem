@@ -16,5 +16,9 @@ public enum Group {
     /**
      * 任何人
      */
-    ANY
+    ANY,
+    /**
+     * 管理员
+     */
+    ADMIN
 }

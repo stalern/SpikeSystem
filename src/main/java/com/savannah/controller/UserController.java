@@ -1,11 +1,15 @@
 package com.savannah.controller;
 
+import com.github.pagehelper.PageInfo;
+import com.savannah.controller.vo.MyPage;
 import com.savannah.controller.vo.UserVO;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.response.ReturnType;
 import com.savannah.service.UserService;
 import com.savannah.service.model.UserDTO;
+import com.savannah.util.auth.Auth;
+import com.savannah.util.auth.Group;
 import com.savannah.util.validator.IsEmail;
 import com.savannah.util.validator.ValidationResult;
 import com.savannah.util.validator.ValidatorImpl;
@@ -14,6 +18,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -49,20 +55,35 @@ public class UserController {
     }
 
     /**
+     * 列出所有用户
+     * @param myPage 页面
+     * @return pageInfo格式的用户
+     */
+    @GetMapping("/listUser")
+    @Auth(Group.ADMIN)
+    public ReturnType listUser(MyPage myPage) {
+        List<UserVO> userVoList = new ArrayList<>();
+        userService.listUser(myPage).forEach(userDTO -> {
+            try {
+                userVoList.add(convertFromDTO(userDTO));
+            } catch (ReturnException e) {
+                e.printStackTrace();
+            }
+        });
+        return ReturnType.create(new PageInfo<>(userVoList));
+    }
+
+    /**
      * 用户登陆接口
      * 参数格式为x-www-form-urlencoded
      * @param email 邮箱
      * @param pwd 密码
-     * @return 登录成功
+     * @return 登录成功，同时返回用户信息存储于前端(不包括密码)
      * @throws ReturnException 用户名不存在或密码错误
      */
     @PostMapping("/login")
     public ReturnType login(@IsEmail String email, String pwd) throws ReturnException {
 
-        ValidationResult result =  validator.validate(email);
-        if(result.isHasErrors()){
-            throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
-        }
         // 入参校验
         if(StringUtils.isEmpty(email)|| StringUtils.isEmpty(email)){
             throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR);
@@ -71,10 +92,10 @@ public class UserController {
         // 用户登陆服务,用来校验用户登陆是否合法
         UserDTO userDTO = userService.validateLogin(email,pwd);
         //将登陆凭证加入到用户登陆成功的session内
-        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
-        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userDTO);
+        this.httpServletRequest.getSession().setAttribute(Constant.IS_LOGIN,true);
+        this.httpServletRequest.getSession().setAttribute(Constant.LOGIN_USER,userDTO);
 
-        return ReturnType.create();
+        return ReturnType.create(convertFromDTO(userDTO));
     }
 
     /**
@@ -98,14 +119,28 @@ public class UserController {
         return ReturnType.create();
     }
 
-    @PostMapping(value = "/register/{otpCode}")
-    public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode) throws ReturnException {
+    @PostMapping("/register/{otpCode}")
+    public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode, @RequestParam("plus")String plus) throws ReturnException {
 
         String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(userDTO.getEmail());
         if (! StringUtils.equals(optCode, inSessionOtpCode)){
             throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR, "短信验证码不符合");
         }
+        if (StringUtils.equals(plus, Constant.ADMIN_ROLE)) {
+            userDTO.setRole(String.valueOf(Group.ADMIN));
+        } else if (StringUtils.equals(plus, Constant.SELLER_ROLE)) {
+            userDTO.setRole(String.valueOf(Group.SELLER));
+        } else {
+            userDTO.setRole(String.valueOf(Group.BUYER));
+        }
         userService.register(userDTO);
+        return ReturnType.create();
+    }
+
+    @GetMapping("/logout")
+    public ReturnType logout() {
+        this.httpServletRequest.getSession().setAttribute(Constant.IS_LOGIN, false);
+        this.httpServletRequest.getSession().setAttribute(Constant.LOGIN_USER, null);
         return ReturnType.create();
     }
 

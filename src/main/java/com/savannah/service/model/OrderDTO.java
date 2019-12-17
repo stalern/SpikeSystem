@@ -34,7 +34,7 @@ public class OrderDTO {
     private Integer amount;
 
     /**
-     * 参加的秒杀活动id
+     * 参加的秒杀活动id，没有参加则为-1
      */
     private Integer promoId;
 
@@ -84,5 +84,17 @@ public class OrderDTO {
 
     public void setPromoId(Integer promoId) {
         this.promoId = promoId;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDTO{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", itemId=" + itemId +
+                ", itemPrice=" + itemPrice +
+                ", amount=" + amount +
+                ", promoId=" + promoId +
+                '}';
     }
 }

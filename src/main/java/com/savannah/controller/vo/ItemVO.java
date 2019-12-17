@@ -1,13 +1,14 @@
-package com.savannah.service.model;
+package com.savannah.controller.vo;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
+ * 商品模型
  * @author stalern
- * @date 2019/12/17~20:30
+ * @date 2019/12/09~20:33
  */
-public class ItemDTO {
+public class ItemVO {
     private Integer id;
 
     /**
@@ -21,9 +22,9 @@ public class ItemDTO {
     private BigDecimal price;
 
     /**
-     * 商品分类，可以有多种分类
+     * 商品分类名称
      */
-    private List<Integer> categoryIds;
+    private List<String> categories;
 
     /**
      * 商品库存
@@ -46,9 +47,9 @@ public class ItemDTO {
     private String imgUrl;
 
     /**
-     * 商品参加的id，如果没有或者活动过期则为null
+     * 商品参加的活动名称，如果没有或者活动过期则为null
      */
-    private Integer promoId;
+    private String promoName;
 
     public Integer getId() {
         return id;
@@ -106,20 +107,20 @@ public class ItemDTO {
         this.imgUrl = imgUrl;
     }
 
-    public List<Integer> getCategoryIds() {
-        return categoryIds;
+    public List<String> getCategories() {
+        return categories;
     }
 
-    public void setCategoryIds(List<Integer> categoryIds) {
-        this.categoryIds = categoryIds;
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
     }
 
-    public Integer getPromoId() {
-        return promoId;
+    public String getPromoName() {
+        return promoName;
     }
 
-    public void setPromoId(Integer promoId) {
-        this.promoId = promoId;
+    public void setPromoName(String promoName) {
+        this.promoName = promoName;
     }
 
     @Override
@@ -128,12 +129,12 @@ public class ItemDTO {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", price=" + price +
-                ", categoryIds=" + categoryIds +
+                ", categories='" + categories + '\'' +
                 ", stock=" + stock +
                 ", description='" + description + '\'' +
                 ", sales=" + sales +
                 ", imgUrl='" + imgUrl + '\'' +
-                ", promoId=" + promoId +
+                ", promoName='" + promoName + '\'' +
                 '}';
     }
 }

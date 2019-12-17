@@ -1,13 +1,23 @@
 package com.savannah.service;
 
+import com.savannah.controller.vo.MyPage;
 import com.savannah.error.ReturnException;
 import com.savannah.service.model.UserDTO;
+
+import java.util.List;
 
 /**
  * @author stalern
  * @date 2019/12/09~21:36
  */
 public interface UserService {
+
+    /**
+     * 求出所有用户
+     * @param myPages 传递第几页和数量
+     * @return 所有用户信息
+     */
+    List<UserDTO> listUser(MyPage myPages);
     /**
      * 通过id返回用户
      * @param id 主键

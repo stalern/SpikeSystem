@@ -1,5 +1,6 @@
 package com.savannah.util.auth;
 
+import com.savannah.controller.Constant;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.model.UserDTO;
@@ -38,9 +39,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         //获取用户的权限
         String userRole;
-        boolean isLogin = request.getSession().getAttribute("IS_LOGIN") != null && (boolean) request.getSession().getAttribute("IS_LOGIN");
+        boolean isLogin = request.getSession().getAttribute(Constant.IS_LOGIN) != null && (boolean) request.getSession().getAttribute("IS_LOGIN");
         if (isLogin) {
-            UserDTO userDTO = (UserDTO) request.getSession().getAttribute("LOGIN_USER");
+            UserDTO userDTO = (UserDTO) request.getSession().getAttribute(Constant.LOGIN_USER);
             userRole = userDTO.getRole();
             if (StringUtils.equals(String.valueOf(role), userRole)) {
                 return true;

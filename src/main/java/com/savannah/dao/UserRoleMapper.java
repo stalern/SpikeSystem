@@ -9,6 +9,11 @@ public interface UserRoleMapper {
 
     int insert(UserRoleDO record);
 
+    /**
+     * 插入用户角色表
+     * @param record 如果选项为空，这用数据库的默认值，不设null
+     * @return 返回主键（前提是xml有设置）
+     */
     int insertSelective(UserRoleDO record);
 
     UserRoleDO selectByPrimaryKey(Integer id);

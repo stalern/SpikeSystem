@@ -16,6 +16,12 @@
     from promo_item
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByItemId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from promo_item ptm, promo_info pin
+    where ptm.item_id = #{itemId,jdbcType=INTEGER} and now() > pin.start_date and pin.end_date > now()
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from promo_item
     where id = #{id,jdbcType=INTEGER}
