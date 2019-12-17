@@ -11,7 +11,7 @@ public class OrderDTO {
     /**
      * 交易单号，具有明确意义
      */
-    private Integer id;
+    private String id;
 
     /**
      * 购买的用户ID
@@ -38,11 +38,11 @@ public class OrderDTO {
      */
     private Integer promoId;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

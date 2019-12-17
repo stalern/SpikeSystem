@@ -1,5 +1,7 @@
 package com.savannah.controller;
 
+import com.github.pagehelper.PageInfo;
+import com.savannah.controller.vo.MyPage;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.response.ReturnType;
@@ -46,6 +48,20 @@ public class OrderController {
             orderService.createOrder(orderDTO);
         }
         return ReturnType.create();
+    }
+
+    /**
+     * 列出一个用户的订单
+     * @return 订单list
+     */
+    @GetMapping("/listByUser")
+    @Auth(Group.BUYER)
+    public ReturnType listOrderByUser(MyPage myPage) throws ReturnException {
+        if (httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN) == null || !(Boolean)httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN)) {
+            throw new ReturnException(EmReturnError.USER_NOT_LOGIN);
+        }
+        UserDTO userDTO = (UserDTO) httpServletRequest.getSession().getAttribute(Constant.LOGIN_USER);
+        return ReturnType.create(new PageInfo<>(orderService.listOrderByUser(userDTO.getId(),myPage)));
     }
 
 }

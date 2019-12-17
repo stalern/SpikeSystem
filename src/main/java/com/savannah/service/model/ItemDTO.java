@@ -1,5 +1,8 @@
 package com.savannah.service.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -13,26 +16,33 @@ public class ItemDTO {
     /**
      * 商品名称
      */
+    @NotBlank(message = "商品名称不能为空")
     private String title;
 
     /**
      * 商品价格
      */
+    @NotNull(message = "价格不能为空")
+    @Min(value = 0, message = "商品价格必须大于0")
     private BigDecimal price;
 
     /**
      * 商品分类，可以有多种分类
      */
+    @NotNull(message = "商品至少有一个分类")
     private List<Integer> categoryIds;
 
     /**
      * 商品库存
      */
+    @NotNull(message = "库存不能不填")
+    @Min(value = 0, message = "库存必须大于0")
     private Integer stock;
 
     /**
      * 商品描述
      */
+    @NotBlank(message = "库存不能为空")
     private String description;
 
     /**
@@ -43,6 +53,7 @@ public class ItemDTO {
     /**
      * 商品图片URL
      */
+    @NotBlank(message = "图片链接不能为null")
     private String imgUrl;
 
     /**

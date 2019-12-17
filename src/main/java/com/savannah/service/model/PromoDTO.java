@@ -2,6 +2,8 @@ package com.savannah.service.model;
 
 import org.joda.time.DateTime;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -15,16 +17,19 @@ public class PromoDTO {
     /**
      * 秒杀活动名称
      */
+    @NotBlank(message = "活动名称必须填")
     private String promoName;
 
     /**
      * 秒杀开始时间
      */
+    @NotNull(message = "活动开始时间必须填写")
     private DateTime startDate;
 
     /**
      * 秒杀活动结束时间
      */
+    @NotNull(message = "活动结束时间必须填写")
     private DateTime endDate;
 
     /**

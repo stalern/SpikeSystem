@@ -1,5 +1,8 @@
 package com.savannah.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.savannah.controller.vo.MyPage;
+import com.savannah.controller.vo.OrderVO;
 import com.savannah.dao.OrderInfoMapper;
 import com.savannah.dataobject.OrderInfoDO;
 import com.savannah.error.EmReturnError;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author stalern
@@ -65,6 +69,12 @@ public class OrderServiceImpl implements OrderService {
         if (!itemService.increaseSales(orderDTO.getItemId(),orderDTO.getAmount())){
             throw new ReturnException(EmReturnError.ITEM_NOT_EXIT,"销量增加错误");
         }
+    }
+
+    @Override
+    public List<OrderVO> listOrderByUser(Integer id, MyPage myPage) {
+        PageHelper.startPage(myPage.getPage(),myPage.getSize());
+        return orderInfoMapper.selectByUser(id);
     }
 
     private OrderInfoDO convertDoFromDto(OrderDTO orderDTO) {
