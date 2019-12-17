@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestControl {
 
     @RequestMapping("/login")
+    @Auth(Group.BUYER)
     public String login() {
         return "login";
     }
