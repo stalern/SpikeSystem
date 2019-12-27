@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.savannah.dao.UserRoleMapper">
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.UserRoleDO">
+  <resultMap id="BaseResultMap" type="com.savannah.entity.UserRoleDO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="role" jdbcType="VARCHAR" property="role" />
@@ -25,13 +25,13 @@
     delete from user_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.UserRoleDO">
+  <insert id="insert" parameterType="com.savannah.entity.UserRoleDO">
     insert into user_role (id, user_id, role
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{role,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.UserRoleDO">
+  <insert id="insertSelective" parameterType="com.savannah.entity.UserRoleDO">
     insert into user_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -56,7 +56,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.UserRoleDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.UserRoleDO">
     update user_role
     <set>
       <if test="userId != null">
@@ -68,7 +68,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.UserRoleDO">
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.UserRoleDO">
     update user_role
     set user_id = #{userId,jdbcType=INTEGER},
       role = #{role,jdbcType=VARCHAR}

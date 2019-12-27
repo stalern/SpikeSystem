@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.savannah.dao.PromoInfoMapper">
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.PromoInfoDO">
+  <resultMap id="BaseResultMap" type="com.savannah.entity.PromoInfoDO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="promo_name" jdbcType="VARCHAR" property="promoName" />
     <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
@@ -20,13 +20,13 @@
     delete from promo_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.PromoInfoDO">
+  <insert id="insert" parameterType="com.savannah.entity.PromoInfoDO">
     insert into promo_info (id, promo_name, start_date, 
       end_date)
     values (#{id,jdbcType=INTEGER}, #{promoName,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, 
       #{endDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.PromoInfoDO">
+  <insert id="insertSelective" parameterType="com.savannah.entity.PromoInfoDO">
     insert into promo_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -57,7 +57,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.PromoInfoDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.PromoInfoDO">
     update promo_info
     <set>
       <if test="promoName != null">
@@ -72,7 +72,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.PromoInfoDO">
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.PromoInfoDO">
     update promo_info
     set promo_name = #{promoName,jdbcType=VARCHAR},
       start_date = #{startDate,jdbcType=TIMESTAMP},

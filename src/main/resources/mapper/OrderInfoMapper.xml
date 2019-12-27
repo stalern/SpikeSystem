@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.savannah.dao.OrderInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.OrderInfoDO" >
+  <resultMap id="BaseResultMap" type="com.savannah.entity.OrderInfoDO" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="item_id" property="itemId" jdbcType="INTEGER" />
@@ -22,7 +22,7 @@
     delete from order_info
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.OrderInfoDO" >
+  <insert id="insert" parameterType="com.savannah.entity.OrderInfoDO" >
     insert into order_info (id, user_id, item_id, 
       order_price, amount, promo_id
       )
@@ -30,7 +30,7 @@
       #{orderPrice,jdbcType=DECIMAL}, #{amount,jdbcType=INTEGER}, #{promoId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.OrderInfoDO" >
+  <insert id="insertSelective" parameterType="com.savannah.entity.OrderInfoDO" >
     insert into order_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.OrderInfoDO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.OrderInfoDO" >
     update order_info
     <set >
       <if test="userId != null" >
@@ -94,7 +94,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.OrderInfoDO" >
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.OrderInfoDO" >
     update order_info
     set user_id = #{userId,jdbcType=VARCHAR},
       item_id = #{itemId,jdbcType=INTEGER},

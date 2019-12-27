@@ -1,7 +1,7 @@
 package com.savannah.dao;
 
 import com.savannah.controller.vo.OrderVO;
-import com.savannah.dataobject.OrderInfoDO;
+import com.savannah.entity.OrderInfoDO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

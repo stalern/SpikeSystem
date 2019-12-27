@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.savannah.dao.UserItemMapper" >
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.UserItemDO" >
+  <resultMap id="BaseResultMap" type="com.savannah.entity.UserItemDO" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="item_id" property="itemId" jdbcType="INTEGER" />
@@ -19,13 +19,13 @@
     delete from user_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.UserItemDO" >
+  <insert id="insert" parameterType="com.savannah.entity.UserItemDO" >
     insert into user_item (id, user_id, item_id
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.UserItemDO" >
+  <insert id="insertSelective" parameterType="com.savannah.entity.UserItemDO" >
     insert into user_item
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -50,7 +50,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.UserItemDO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.UserItemDO" >
     update user_item
     <set >
       <if test="userId != null" >
@@ -62,7 +62,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.UserItemDO" >
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.UserItemDO" >
     update user_item
     set user_id = #{userId,jdbcType=INTEGER},
       item_id = #{itemId,jdbcType=INTEGER}

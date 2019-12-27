@@ -1,20 +1,24 @@
 package com.savannah.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.savannah.controller.vo.MyPage;
 import com.savannah.dao.ItemCategoryMapper;
 import com.savannah.dao.ItemInfoMapper;
 import com.savannah.dao.ItemStockMapper;
 import com.savannah.dao.PromoItemMapper;
-import com.savannah.dataobject.ItemCategoryDO;
-import com.savannah.dataobject.ItemInfoDO;
-import com.savannah.dataobject.ItemStockDO;
-import com.savannah.dataobject.PromoItemDO;
+import com.savannah.entity.ItemCategoryDO;
+import com.savannah.entity.ItemInfoDO;
+import com.savannah.entity.ItemStockDO;
+import com.savannah.entity.PromoItemDO;
+import com.savannah.error.EmReturnError;
+import com.savannah.error.ReturnException;
 import com.savannah.service.ItemService;
 import com.savannah.service.model.ItemDTO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,12 +71,121 @@ public class ItemServiceImpl implements ItemService {
         return convertDtoFromDo(itemInfoDO,itemCategoryDos,itemStockDO,promoItemDO);
     }
 
-    private ItemDTO convertDtoFromDo(ItemInfoDO itemInfoDO, List<ItemCategoryDO> itemCategoryDos, ItemStockDO itemStockDO, PromoItemDO promoItemDO) {
+    @Override
+    @Transactional(rollbackFor = ReturnException.class)
+    public ItemDTO createItem(ItemDTO itemDTO) throws ReturnException {
+        if (itemDTO == null) {
+            throw new ReturnException(EmReturnError.ITEM_CAN_NOT_CREATE);
+        }
+        // 分类
+        List<ItemCategoryDO> itemCategoryDos = convertCategoryDoFromDto(itemDTO);
+        itemCategoryDos.forEach(itemCategoryMapper::insertSelective);
+        // 商品
+        ItemInfoDO itemInfoDO = convertInfoDoFromDto(itemDTO);
+        itemInfoMapper.insertSelective(itemInfoDO);
+        itemDTO.setId(itemInfoDO.getId());
+        // 库存
+        ItemStockDO itemStockDO = convertStockDoFromDto(itemDTO);
+        itemStockMapper.insertSelective(itemStockDO);
+        // 活动
+        if (itemDTO.getPromoId() != null) {
+            PromoItemDO promoItemDO = convertPromoDoFromDto(itemDTO);
+            promoItemMapper.insertSelective(promoItemDO);
+        }
+        return getItemById(itemDTO.getId());
+    }
+
+    @Override
+    public ItemDTO updateItem(ItemDTO itemDTO) throws ReturnException {
+        ItemDTO oldItemDTO = getItemById(itemDTO.getId());
+        // 先校验新的DTO和原来的DTO有什么不同
+        if (oldItemDTO == null) {
+            throw new ReturnException(EmReturnError.ITEM_NOT_EXIT);
+        }
+        // 分类
+        boolean equalCategory = oldItemDTO.getCategoryIds().size() == itemDTO.getCategoryIds().size()
+                && oldItemDTO.getCategoryIds().containsAll(itemDTO.getCategoryIds());
+        if (!equalCategory) {
+            List<ItemCategoryDO> itemCategoryDos = convertCategoryDoFromDto(itemDTO);
+            itemCategoryMapper.deleteByItemId(itemDTO.getId());
+            itemCategoryDos.forEach(itemCategoryMapper::insertSelective);
+        }
+        // 商品
+        ItemInfoDO itemInfoDO = convertInfoDoFromDto(itemDTO);
+        itemInfoMapper.updateByPrimaryKeySelective(itemInfoDO);
+        // 库存
+        ItemStockDO itemStockDO = convertStockDoFromDto(itemDTO);
+        itemStockMapper.updateByItemIdSelective(itemStockDO);
+        // 活动
+        boolean equalPromo = oldItemDTO.getPromoId().equals(itemDTO.getPromoId())
+                && oldItemDTO.getPromoPrice().equals(itemDTO.getPromoPrice());
+        if (itemDTO.getPromoId() != null && !equalPromo) {
+            PromoItemDO promoItemDO = convertPromoDoFromDto(itemDTO);
+            promoItemMapper.updateByItemIdSelective(promoItemDO);
+        }
+        return getItemById(itemDTO.getId());
+    }
+
+    @Override
+    public List<ItemDTO> listItemByCategory(Integer id, MyPage myPage) {
+        PageHelper.startPage(myPage.getPage(),myPage.getSize());
+        return itemInfoMapper.listItemByCategoryId(id);
+    }
+
+    @Override
+    public List<ItemDTO> listItemByPromoId(Integer id, MyPage myPage) {
+        PageHelper.startPage(myPage.getPage(),myPage.getSize());
+        return itemInfoMapper.listItemByPromoId(id);
+    }
+
+    @Override
+    public void deleteItem(Integer id) throws ReturnException {
+        if (itemInfoMapper.deleteByPrimaryKey(id) < 0) {
+            throw new ReturnException(EmReturnError.ITEM_DELETE_ERROR);
+        }
+        itemCategoryMapper.deleteByItemId(id);
+        itemStockMapper.deleteByItemId(id);
+        promoItemMapper.deleteByItemId(id);
+    }
+
+    private ItemStockDO convertStockDoFromDto(ItemDTO itemDTO) {
+        ItemStockDO itemStockDO = new ItemStockDO();
+        itemStockDO.setItemId(itemDTO.getId());
+        itemStockDO.setStock(itemDTO.getStock());
+        return itemStockDO;
+    }
+    private PromoItemDO convertPromoDoFromDto(ItemDTO itemDTO) {
+        PromoItemDO promoItemDO = new PromoItemDO();
+        promoItemDO.setItemId(itemDTO.getId());
+        promoItemDO.setPromoId(itemDTO.getPromoId());
+        promoItemDO.setPromoItemPrice(itemDTO.getPromoPrice());
+        return promoItemDO;
+    }
+
+    private ItemInfoDO convertInfoDoFromDto(ItemDTO itemDTO) {
+        ItemInfoDO itemInfoDO = new ItemInfoDO();
+        BeanUtils.copyProperties(itemDTO,itemInfoDO);
+        return itemInfoDO;
+    }
+
+    private List<ItemCategoryDO> convertCategoryDoFromDto(ItemDTO itemDTO) {
+        List<ItemCategoryDO> itemCategoryDos = new ArrayList<>(3);
+        ItemCategoryDO itemCategoryDO = new ItemCategoryDO();
+        itemCategoryDO.setItemId(itemDTO.getId());
+        itemDTO.getCategoryIds().forEach(e->{
+            itemCategoryDO.setCategoryId(e);
+            itemCategoryDos.add(itemCategoryDO);
+        });
+        return itemCategoryDos;
+    }
+
+    private ItemDTO convertDtoFromDo(ItemInfoDO itemInfoDO, List<ItemCategoryDO> itemCategoryDos,
+                                     ItemStockDO itemStockDO, PromoItemDO promoItemDO) {
         ItemDTO itemDTO = new ItemDTO();
         BeanUtils.copyProperties(itemInfoDO, itemDTO);
         itemDTO.setStock(itemStockDO.getStock());
         if (promoItemDO != null) {
-            itemDTO.setPrice(promoItemDO.getPromoItemPrice());
+            itemDTO.setPromoPrice(promoItemDO.getPromoItemPrice());
             itemDTO.setPromoId(promoItemDO.getPromoId());
         }
         itemDTO.setCategoryIds(itemCategoryDos.stream().map(ItemCategoryDO::getCategoryId).collect(Collectors.toList()));

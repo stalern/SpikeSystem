@@ -24,7 +24,7 @@ public class ItemVO {
     /**
      * 商品分类名称
      */
-    private List<String> categories;
+    private List<String> categoriesName;
 
     /**
      * 商品库存
@@ -50,6 +50,11 @@ public class ItemVO {
      * 商品参加的活动名称，如果没有或者活动过期则为null
      */
     private String promoName;
+
+    /**
+     * 商品参加活动时的价格，没有活动该价格则为null
+     */
+    private BigDecimal promoPrice;
 
     public Integer getId() {
         return id;
@@ -107,12 +112,12 @@ public class ItemVO {
         this.imgUrl = imgUrl;
     }
 
-    public List<String> getCategories() {
-        return categories;
+    public List<String> getCategoriesName() {
+        return categoriesName;
     }
 
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
+    public void setCategoriesName(List<String> categoriesName) {
+        this.categoriesName = categoriesName;
     }
 
     public String getPromoName() {
@@ -123,18 +128,27 @@ public class ItemVO {
         this.promoName = promoName;
     }
 
+    public BigDecimal getPromoPrice() {
+        return promoPrice;
+    }
+
+    public void setPromoPrice(BigDecimal promoPrice) {
+        this.promoPrice = promoPrice;
+    }
+
     @Override
     public String toString() {
-        return "ItemDTO{" +
+        return "ItemVO{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", price=" + price +
-                ", categories='" + categories + '\'' +
+                ", categoriesName=" + categoriesName +
                 ", stock=" + stock +
                 ", description='" + description + '\'' +
                 ", sales=" + sales +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", promoName='" + promoName + '\'' +
+                ", promoPrice=" + promoPrice +
                 '}';
     }
 }

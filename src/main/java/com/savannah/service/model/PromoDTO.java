@@ -35,6 +35,7 @@ public class PromoDTO {
     /**
      * 秒杀商品的id和活动时的价格
      * 一个秒杀活动可以包含多个商品
+     * 可能会删除
      */
     private Map<Integer, BigDecimal> promoPrice;
 
@@ -87,5 +88,9 @@ public class PromoDTO {
                 ", endDate=" + endDate +
                 ", promoPrice=" + promoPrice +
                 '}';
+    }
+
+    public boolean isNow() {
+        return startDate.isBeforeNow() && endDate.isAfterNow();
     }
 }

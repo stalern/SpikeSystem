@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.savannah.dao.PromoItemMapper">
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.PromoItemDO">
+  <resultMap id="BaseResultMap" type="com.savannah.entity.PromoItemDO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="promo_id" jdbcType="INTEGER" property="promoId" />
     <result column="item_id" jdbcType="INTEGER" property="itemId" />
@@ -16,6 +16,12 @@
     from promo_item
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="listPromoItemByPromoId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from promo_item
+    where promo_id = #{promoId,jdbcType=INTEGER}
+  </select>
   <select id="selectByItemId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -26,13 +32,17 @@
     delete from promo_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.PromoItemDO">
+  <delete id="deleteByItemId" parameterType="java.lang.Integer">
+    delete from promo_item
+    where item_id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.savannah.entity.PromoItemDO">
     insert into promo_item (id, promo_id, item_id, 
       promo_item_price)
     values (#{id,jdbcType=INTEGER}, #{promoId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, 
-      #{promoItemPrice,jdbcType=DECIMAL}, #{column5,jdbcType=INTEGER})
+      #{promoItemPrice,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.PromoItemDO">
+  <insert id="insertSelective" parameterType="com.savannah.entity.PromoItemDO">
     insert into promo_item
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -61,12 +71,9 @@
       <if test="promoItemPrice != null">
         #{promoItemPrice,jdbcType=DECIMAL},
       </if>
-      <if test="column5 != null">
-        #{column5,jdbcType=INTEGER},
-      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.PromoItemDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.PromoItemDO">
     update promo_item
     <set>
       <if test="promoId != null">
@@ -81,7 +88,19 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.PromoItemDO">
+  <update id="updateByItemIdSelective" parameterType="com.savannah.entity.PromoItemDO">
+    update promo_item
+    <set>
+      <if test="promoId != null">
+        promo_id = #{promoId,jdbcType=INTEGER},
+      </if>
+      <if test="promoItemPrice != null">
+        promo_item_price = #{promoItemPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.PromoItemDO">
     update promo_item
     set promo_id = #{promoId,jdbcType=INTEGER},
       item_id = #{itemId,jdbcType=INTEGER},

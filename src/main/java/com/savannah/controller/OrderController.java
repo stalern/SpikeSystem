@@ -40,6 +40,7 @@ public class OrderController {
     @PostMapping("/buy")
     @Auth(Group.BUYER)
     public ReturnType postOrder(@RequestBody OrderDTO orderDTO) throws ReturnException {
+        // if或许可以取消
         if (httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN) == null || !(Boolean)httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN)) {
             throw new ReturnException(EmReturnError.USER_NOT_LOGIN);
         } else {

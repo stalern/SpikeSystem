@@ -1,10 +1,8 @@
 package com.savannah.dao;
 
-import com.savannah.dataobject.UserInfoDO;
+import com.savannah.entity.UserInfoDO;
 import com.savannah.service.model.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 

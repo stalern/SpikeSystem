@@ -1,6 +1,6 @@
 package com.savannah.dao;
 
-import com.savannah.dataobject.UserRoleDO;
+import com.savannah.entity.UserRoleDO;
 import org.springframework.stereotype.Repository;
 
 @Repository

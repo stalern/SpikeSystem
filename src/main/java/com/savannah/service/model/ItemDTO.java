@@ -61,6 +61,11 @@ public class ItemDTO {
      */
     private Integer promoId;
 
+    /**
+     * 活动对应的商品价格，没有活动则为空
+     */
+    private BigDecimal promoPrice;
+
     public Integer getId() {
         return id;
     }
@@ -133,6 +138,14 @@ public class ItemDTO {
         this.promoId = promoId;
     }
 
+    public BigDecimal getPromoPrice() {
+        return promoPrice;
+    }
+
+    public void setPromoPrice(BigDecimal promoPrice) {
+        this.promoPrice = promoPrice;
+    }
+
     @Override
     public String toString() {
         return "ItemDTO{" +
@@ -145,6 +158,7 @@ public class ItemDTO {
                 ", sales=" + sales +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", promoId=" + promoId +
+                ", promoPrice=" + promoPrice +
                 '}';
     }
 }

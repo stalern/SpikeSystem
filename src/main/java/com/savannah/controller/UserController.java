@@ -119,6 +119,14 @@ public class UserController {
         return ReturnType.create();
     }
 
+    /**
+     * 用户注册
+     * @param userDTO 用户信息
+     * @param optCode 验证码
+     * @param plus 角色
+     * @return 成功或失败
+     * @throws ReturnException 返回异常
+     */
     @PostMapping("/register/{otpCode}")
     public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode, @RequestParam("plus")String plus) throws ReturnException {
 

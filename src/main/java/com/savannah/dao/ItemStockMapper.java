@@ -1,6 +1,6 @@
 package com.savannah.dao;
 
-import com.savannah.dataobject.ItemStockDO;
+import com.savannah.entity.ItemStockDO;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +14,11 @@ public interface ItemStockMapper {
 
     int insert(ItemStockDO record);
 
+    /**
+     * 插入商品库存
+     * @param record 商品库存
+     * @return 主键
+     */
     int insertSelective(ItemStockDO record);
 
     ItemStockDO selectByPrimaryKey(Integer id);
@@ -33,8 +38,20 @@ public interface ItemStockMapper {
      * 减少库存
      * @param itemId 商品id
      * @param amount 数量
-     * @return 主键
+     * @return 影响的条目数，如果执行失败则为0
      */
     @Update("update item_stock set stock = stock - #{amount} where item_id = #{itemId} and stock >= #{amount}")
     int decreaseStock(Integer itemId, Integer amount);
+
+    /**
+     * 更新商品库存
+     * @param itemStockDO 商品库存
+     */
+    void updateByItemIdSelective(ItemStockDO itemStockDO);
+
+    /**
+     * 通过商品id删除商品库存
+     * @param id itemId
+     */
+    void deleteByItemId(Integer id);
 }

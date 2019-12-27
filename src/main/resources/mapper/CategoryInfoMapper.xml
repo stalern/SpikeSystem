@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.savannah.dao.CategoryInfoMapper">
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.CategoryInfoDO">
+  <resultMap id="BaseResultMap" type="com.savannah.entity.CategoryInfoDO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="number" jdbcType="TINYINT" property="number" />
@@ -22,7 +22,7 @@
     delete from category_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.CategoryInfoDO">
+  <insert id="insert" parameterType="com.savannah.entity.CategoryInfoDO">
     insert into category_info (id, name, number, 
       create_by, modified_by, parent_id
       )
@@ -30,7 +30,7 @@
       #{createBy,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=TIMESTAMP}, #{parentId,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.CategoryInfoDO">
+  <insert id="insertSelective" parameterType="com.savannah.entity.CategoryInfoDO">
     insert into category_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.CategoryInfoDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.CategoryInfoDO">
     update category_info
     <set>
       <if test="name != null">
@@ -94,7 +94,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.CategoryInfoDO">
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.CategoryInfoDO">
     update category_info
     set name = #{name,jdbcType=VARCHAR},
       number = #{number,jdbcType=TINYINT},

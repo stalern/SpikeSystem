@@ -1,6 +1,6 @@
 package com.savannah.dao;
 
-import com.savannah.dataobject.UserItemDO;
+import com.savannah.entity.UserItemDO;
 
 public interface UserItemMapper {
     int deleteByPrimaryKey(Integer id);

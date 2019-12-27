@@ -1,4 +1,4 @@
-package com.savannah.dataobject;
+package com.savannah.entity;
 
 /**
  * @author stalern

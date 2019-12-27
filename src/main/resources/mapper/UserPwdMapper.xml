@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.savannah.dao.UserPwdMapper" >
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.UserPwdDO" >
+  <resultMap id="BaseResultMap" type="com.savannah.entity.UserPwdDO" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="encrypted_pwd" property="encryptedPwd" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
@@ -25,13 +25,13 @@
     delete from user_pwd
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.UserPwdDO" >
+  <insert id="insert" parameterType="com.savannah.entity.UserPwdDO" >
     insert into user_pwd (id, encrypted_pwd, user_id
       )
     values (#{id,jdbcType=INTEGER}, #{encryptedPwd,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.UserPwdDO" >
+  <insert id="insertSelective" parameterType="com.savannah.entity.UserPwdDO" >
     insert into user_pwd
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -56,7 +56,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.UserPwdDO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.UserPwdDO" >
     update user_pwd
     <set >
       <if test="encryptedPwd != null" >
@@ -68,7 +68,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.UserPwdDO" >
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.UserPwdDO" >
     update user_pwd
     set encrypted_pwd = #{encryptedPwd,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER}

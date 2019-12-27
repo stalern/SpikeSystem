@@ -1,13 +1,16 @@
-package com.savannah.dataobject;
+package com.savannah.service.model;
+
+import javax.validation.constraints.NotBlank;
 
 /**
- * 商品分类
+ * categoryDTO
  * @author stalern
- * @date 2019年12月16日15:37:50
+ * @date 2019/12/24~08:38
  */
-public class CategoryInfoDO {
+public class CategoryDTO {
     private Integer id;
 
+    @NotBlank(message = "分类名称不能为空")
     private String name;
 
     public Integer getId() {

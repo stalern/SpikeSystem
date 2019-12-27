@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.savannah.dao.ItemInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.savannah.dataobject.ItemInfoDO" >
+  <resultMap id="BaseResultMap" type="com.savannah.entity.ItemInfoDO" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DECIMAL" />
@@ -18,11 +18,23 @@
     from item_info
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="listItemByCategoryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    i1.id, title, price, description, sales, img_url
+    from item_info i1 join item_category i2 on i1.id = i2.item_id
+    where i2.category_id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="listItemByPromoId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+      i1.id, title, price, description, sales, img_url
+    from item_info i1 join promo_item i2 on i1.id = i2.item_id
+    where i2.promo_id = #{id,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.savannah.dataobject.ItemInfoDO" >
+  <insert id="insert" parameterType="com.savannah.entity.ItemInfoDO" >
     insert into item_info (id, title, price, 
       description, sales, img_url
       )
@@ -30,7 +42,7 @@
       #{description,jdbcType=VARCHAR}, #{sales,jdbcType=INTEGER}, #{imgUrl,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.dataobject.ItemInfoDO" >
+  <insert id="insertSelective" parameterType="com.savannah.entity.ItemInfoDO" useGeneratedKeys="true" keyProperty="id">
     insert into item_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,7 +85,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.dataobject.ItemInfoDO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.ItemInfoDO" >
     update item_info
     <set >
       <if test="title != null" >
@@ -94,7 +106,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.savannah.dataobject.ItemInfoDO" >
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.ItemInfoDO" >
     update item_info
     set title = #{title,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},

@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.savannah.controller.vo.MyPage;
 import com.savannah.controller.vo.OrderVO;
 import com.savannah.dao.OrderInfoMapper;
-import com.savannah.dataobject.OrderInfoDO;
+import com.savannah.entity.OrderInfoDO;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.ItemService;

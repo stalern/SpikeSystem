@@ -27,7 +27,9 @@ public enum EmReturnError implements ReturnError {
      * 20000开头为商品相关
      */
     ITEM_NOT_EXIT(20001,"商品不存在"),
-    STOCK_NOT_ENOUGH(20001,"库存不够");
+    ITEM_CAN_NOT_CREATE(20002,"商品不能被创建"),
+    STOCK_NOT_ENOUGH(20003,"库存不够"),
+    ITEM_DELETE_ERROR(20003,"商品删除失败");
 
 
     private int errCode;

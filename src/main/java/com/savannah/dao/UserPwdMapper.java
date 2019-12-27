@@ -1,6 +1,6 @@
 package com.savannah.dao;
 
-import com.savannah.dataobject.UserPwdDO;
+import com.savannah.entity.UserPwdDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

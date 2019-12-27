@@ -18,7 +18,7 @@
                         password="2267017560Llv.">
         </jdbcConnection>
         <!--生成Pojo类存放位置-->
-        <javaModelGenerator targetPackage="com.savannah.dataobject" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.savannah.entity" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
