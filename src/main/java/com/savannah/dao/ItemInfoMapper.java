@@ -61,12 +61,19 @@ public interface ItemInfoMapper {
      * @param id 分类id
      * @return 商品信息
      */
-    List<ItemDTO> listItemByCategoryId(Integer id);
+    List<ItemInfoDO> listItemByCategoryId(Integer id);
 
     /**
      * 通过活动id拿到商品信息
      * @param id promoId
      * @return 商品信息
      */
-    List<ItemDTO> listItemByPromoId(Integer id);
+    List<ItemInfoDO> listItemByPromoId(Integer id);
+
+    /**
+     * 列出和用户相关的商品
+     * @param id userId
+     * @return itemInfoList
+     */
+    List<ItemInfoDO> listItemByUserId(Integer id);
 }

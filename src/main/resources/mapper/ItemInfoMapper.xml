@@ -30,6 +30,12 @@
     from item_info i1 join promo_item i2 on i1.id = i2.item_id
     where i2.promo_id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="listItemByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+      i1.id, title, price, description, sales, img_url
+    from item_info i1 join user_item i2 on i1.id = i2.item_id
+    where i2.user_id = #{id,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from item_info
     where id = #{id,jdbcType=INTEGER}

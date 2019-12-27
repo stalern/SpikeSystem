@@ -29,7 +29,13 @@ public enum EmReturnError implements ReturnError {
     ITEM_NOT_EXIT(20001,"商品不存在"),
     ITEM_CAN_NOT_CREATE(20002,"商品不能被创建"),
     STOCK_NOT_ENOUGH(20003,"库存不够"),
-    ITEM_DELETE_ERROR(20003,"商品删除失败");
+    ITEM_DELETE_ERROR(20003,"商品删除失败"),
+
+    /**
+     * 30000开头为活动相关
+     */
+    PROMO_EXIST_ERROR(30001, "活动出现异常"),
+    PROMO_NOT_EXIT(30002, "活动不存在");
 
 
     private int errCode;

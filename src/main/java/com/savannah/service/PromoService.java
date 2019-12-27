@@ -1,6 +1,9 @@
 package com.savannah.service;
 
+import com.savannah.controller.vo.MyPage;
 import com.savannah.service.model.PromoDTO;
+
+import java.util.List;
 
 /**
  * @author stalern
@@ -16,4 +19,15 @@ public interface PromoService {
      */
     PromoDTO getPromoById(Integer id);
 
+    /**
+     * 列出所有活动
+     * @return promoList
+     */
+    List<PromoDTO> listPromo();
+
+    /**
+     * 列出当前所有活动
+     * @return promoList
+     */
+    List<PromoDTO> listPromoNow();
 }

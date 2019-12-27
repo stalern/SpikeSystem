@@ -1,5 +1,7 @@
 package com.savannah.entity;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 
 /**
@@ -45,6 +47,12 @@ public class PromoInfoDO {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean isNow() {
+        DateTime start = new DateTime(startDate);
+        DateTime end = new DateTime(endDate);
+        return start.isBeforeNow() && end.isAfterNow();
     }
 
     @Override

@@ -19,6 +19,10 @@
     delete from user_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByUserItem" parameterType="java.lang.Integer" >
+    delete from user_item
+    where item_id = #{itemId,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.savannah.entity.UserItemDO" >
     insert into user_item (id, user_id, item_id
       )

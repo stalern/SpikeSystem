@@ -54,18 +54,16 @@ public interface ItemService {
     /**
      * 通过分类列出商品信息
      * @param id 分类id
-     * @param myPage 页数
      * @return 列表DTO
      */
-    List<ItemDTO> listItemByCategory(Integer id, MyPage myPage);
+    List<ItemDTO> listItemByCategory(Integer id);
 
     /**
      * 通过活动列出商品信息
      * @param id 分类id
-     * @param myPage 页数
      * @return 列表DTO
      */
-    List<ItemDTO> listItemByPromoId(Integer id, MyPage myPage);
+    List<ItemDTO> listItemByPromoId(Integer id);
 
     /**
      * 通过商品id删除商品
@@ -73,4 +71,25 @@ public interface ItemService {
      * @throws ReturnException 商品删除失败
      */
     void deleteItem(Integer id) throws ReturnException;
+
+    /**
+     * 列出某用户的商品
+     * @param id userId
+     * @return itemList
+     */
+    List<ItemDTO> listItemByUser(Integer id);
+
+    /**
+     * 创建商品用户联系
+     * @param id userId
+     * @param itemId itemId
+     */
+    void createUserItem(Integer id, Integer itemId);
+
+    /**
+     * 删除商品用户联系
+     * @param id userId
+     * @param itemId itemId
+     */
+    void deleteUserItem(Integer id, Integer itemId);
 }

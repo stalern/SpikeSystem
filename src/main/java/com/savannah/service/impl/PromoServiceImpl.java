@@ -6,10 +6,10 @@ import com.savannah.entity.PromoInfoDO;
 import com.savannah.entity.PromoItemDO;
 import com.savannah.service.PromoService;
 import com.savannah.service.model.PromoDTO;
-import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,17 +34,28 @@ public class PromoServiceImpl implements PromoService {
         if (promoInfoDO == null) {
             return null;
         }
-        /*
-        没有必要
-        DateTime startTime = new DateTime(promoInfoDO.getStartDate());
-        DateTime endTime = new DateTime(promoInfoDO.getEndDate());
-        if (startTime.isBeforeNow() && endTime.isAfterNow()) {
-            return convertDtoFromDo(promoInfoDO, null);
-        } else {
-         */
         List<PromoItemDO> promoItemDO = promoItemMapper.listPromoItemByPromoId(promoId);
         return convertDtoFromDo(promoInfoDO, promoItemDO);
 
+    }
+
+    @Override
+    public List<PromoDTO> listPromo() {
+        List<PromoDTO> promoDTOList = new ArrayList<>();
+        List<PromoInfoDO> promoInfoDOList = promoInfoMapper.listPromo();
+        promoInfoDOList.forEach(e-> promoDTOList.add(
+                convertDtoFromDo(e,promoItemMapper.listPromoItemByPromoId(e.getId()))));
+        return promoDTOList;
+    }
+
+    @Override
+    public List<PromoDTO> listPromoNow() {
+        List<PromoDTO> promoDTOList = new ArrayList<>();
+        List<PromoInfoDO> promoInfoDOList = promoInfoMapper.listPromo().stream().
+                filter(PromoInfoDO::isNow).collect(Collectors.toList());
+        promoInfoDOList.forEach(e-> promoDTOList.add(
+                convertDtoFromDo(e,promoItemMapper.listPromoItemByPromoId(e.getId()))));
+        return promoDTOList;
     }
 
     private PromoDTO convertDtoFromDo(PromoInfoDO promoInfoDO, List<PromoItemDO> promoItemDO) {
@@ -54,7 +65,8 @@ public class PromoServiceImpl implements PromoService {
         }
         BeanUtils.copyProperties(promoInfoDO, promoDTO);
         if (promoItemDO != null) {
-            promoDTO.setPromoPrice(promoItemDO.stream().collect(Collectors.toMap(PromoItemDO::getId, PromoItemDO::getPromoItemPrice)));
+            promoDTO.setPromoPrice(
+                    promoItemDO.stream().collect(Collectors.toMap(PromoItemDO::getId, PromoItemDO::getPromoItemPrice)));
         }
         return promoDTO;
     }

@@ -39,7 +39,8 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         //获取用户的权限
         String userRole;
-        boolean isLogin = request.getSession().getAttribute(Constant.IS_LOGIN) != null && (boolean) request.getSession().getAttribute("IS_LOGIN");
+        boolean isLogin = request.getSession().getAttribute(Constant.IS_LOGIN) != null
+                && (boolean) request.getSession().getAttribute(Constant.IS_LOGIN);
         if (isLogin) {
             UserDTO userDTO = (UserDTO) request.getSession().getAttribute(Constant.LOGIN_USER);
             userRole = userDTO.getRole();

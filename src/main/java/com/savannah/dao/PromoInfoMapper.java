@@ -3,6 +3,8 @@ package com.savannah.dao;
 import com.savannah.entity.PromoInfoDO;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author stalern
  * @date 2019年12月9日17:24:41
@@ -25,4 +27,10 @@ public interface PromoInfoMapper {
     int updateByPrimaryKeySelective(PromoInfoDO record);
 
     int updateByPrimaryKey(PromoInfoDO record);
+
+    /**
+     * 列出所有活动信息
+     * @return 活动信息List
+     */
+    List<PromoInfoDO> listPromo();
 }

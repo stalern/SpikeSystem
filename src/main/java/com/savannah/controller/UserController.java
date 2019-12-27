@@ -145,6 +145,10 @@ public class UserController {
         return ReturnType.create();
     }
 
+    /**
+     * 用户退出
+     * @return 公共则返回ok
+     */
     @GetMapping("/logout")
     public ReturnType logout() {
         this.httpServletRequest.getSession().setAttribute(Constant.IS_LOGIN, false);

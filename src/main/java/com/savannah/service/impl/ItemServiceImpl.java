@@ -1,15 +1,7 @@
 package com.savannah.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.savannah.controller.vo.MyPage;
-import com.savannah.dao.ItemCategoryMapper;
-import com.savannah.dao.ItemInfoMapper;
-import com.savannah.dao.ItemStockMapper;
-import com.savannah.dao.PromoItemMapper;
-import com.savannah.entity.ItemCategoryDO;
-import com.savannah.entity.ItemInfoDO;
-import com.savannah.entity.ItemStockDO;
-import com.savannah.entity.PromoItemDO;
+import com.savannah.dao.*;
+import com.savannah.entity.*;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.ItemService;
@@ -33,12 +25,15 @@ public class ItemServiceImpl implements ItemService {
     private final ItemStockMapper itemStockMapper;
     private final PromoItemMapper promoItemMapper;
     private final ItemCategoryMapper itemCategoryMapper;
+    private final UserItemMapper userItemMapper;
 
-    public ItemServiceImpl(ItemInfoMapper itemInfoMapper, ItemStockMapper itemStockMapper, PromoItemMapper promoItemMapper, ItemCategoryMapper itemCategoryMapper) {
+    public ItemServiceImpl(ItemInfoMapper itemInfoMapper, ItemStockMapper itemStockMapper,
+                           PromoItemMapper promoItemMapper, ItemCategoryMapper itemCategoryMapper, UserItemMapper userItemMapper) {
         this.itemInfoMapper = itemInfoMapper;
         this.itemStockMapper = itemStockMapper;
         this.promoItemMapper = promoItemMapper;
         this.itemCategoryMapper = itemCategoryMapper;
+        this.userItemMapper = userItemMapper;
     }
 
     @Override
@@ -127,15 +122,40 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDTO> listItemByCategory(Integer id, MyPage myPage) {
-        PageHelper.startPage(myPage.getPage(),myPage.getSize());
-        return itemInfoMapper.listItemByCategoryId(id);
+    public List<ItemDTO> listItemByCategory(Integer id) {
+        List<ItemInfoDO> itemInfoDOList = itemInfoMapper.listItemByCategoryId(id);
+        List<ItemDTO> itemDTOList = new ArrayList<>();
+        itemInfoDOList.forEach(e-> itemDTOList.add(getItemById(e.getId())));
+        return itemDTOList;
     }
 
     @Override
-    public List<ItemDTO> listItemByPromoId(Integer id, MyPage myPage) {
-        PageHelper.startPage(myPage.getPage(),myPage.getSize());
-        return itemInfoMapper.listItemByPromoId(id);
+    public List<ItemDTO> listItemByPromoId(Integer id) {
+        List<ItemInfoDO> itemInfoDOList = itemInfoMapper.listItemByPromoId(id);
+        List<ItemDTO> itemDTOList = new ArrayList<>();
+        itemInfoDOList.forEach(e-> itemDTOList.add(getItemById(e.getId())));
+        return itemDTOList;
+    }
+
+    @Override
+    public List<ItemDTO> listItemByUser(Integer id) {
+        List<ItemInfoDO> itemInfoDOList = itemInfoMapper.listItemByUserId(id);
+        List<ItemDTO> itemDTOList = new ArrayList<>();
+        itemInfoDOList.forEach(e-> itemDTOList.add(getItemById(e.getId())));
+        return itemDTOList;
+    }
+
+    @Override
+    public void createUserItem(Integer id, Integer itemId) {
+        UserItemDO userItemDO = new UserItemDO();
+        userItemDO.setItemId(itemId);
+        userItemDO.setUserId(id);
+        userItemMapper.insertSelective(userItemDO);
+    }
+
+    @Override
+    public void deleteUserItem(Integer id, Integer itemId) {
+        userItemMapper.deleteByUserItem(id,itemId);
     }
 
     @Override

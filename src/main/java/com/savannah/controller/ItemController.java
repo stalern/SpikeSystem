@@ -1,5 +1,6 @@
 package com.savannah.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.savannah.controller.vo.ItemVO;
 import com.savannah.controller.vo.MyPage;
@@ -58,7 +59,8 @@ public class ItemController {
     @GetMapping("listItemByPromo/{id}")
     public ReturnType listItemByPromo(@PathVariable Integer id, MyPage myPage){
         List<ItemVO> itemVO = new ArrayList<>();
-        itemService.listItemByPromoId(id,myPage).forEach(e->{
+        PageHelper.startPage(myPage.getPage(),myPage.getSize());
+        itemService.listItemByPromoId(id).forEach(e->{
             try {
                 itemVO.add(convertFromDTO(e));
             } catch (ReturnException ex) {
@@ -76,7 +78,8 @@ public class ItemController {
     @GetMapping("listItemByCategory/{id}")
     public ReturnType listItemByCategory(@PathVariable Integer id, MyPage myPage){
         List<ItemVO> itemVO = new ArrayList<>();
-        itemService.listItemByCategory(id,myPage).forEach(e->{
+        PageHelper.startPage(myPage.getPage(),myPage.getSize());
+        itemService.listItemByCategory(id).forEach(e->{
             try {
                 itemVO.add(convertFromDTO(e));
             } catch (ReturnException ex) {
@@ -124,7 +127,7 @@ public class ItemController {
         return ReturnType.create();
     }
 
-    private ItemVO convertFromDTO(ItemDTO item) throws ReturnException {
+    ItemVO convertFromDTO(ItemDTO item) throws ReturnException {
         if (item == null) {
             throw new ReturnException(EmReturnError.ITEM_CAN_NOT_CREATE);
         }
