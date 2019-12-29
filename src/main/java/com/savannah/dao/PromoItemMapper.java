@@ -1,7 +1,6 @@
 package com.savannah.dao;
 
 import com.savannah.entity.PromoItemDO;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -54,4 +53,16 @@ public interface PromoItemMapper {
      * @param id itemId
      */
     void deleteByItemId(Integer id);
+
+    /**
+     * 插入列表
+     * @param promoItemDOList promoItemList
+     */
+    void insertListSelective(List<PromoItemDO> promoItemDOList);
+
+    /**
+     * 删除
+     * @param id promoId
+     */
+    void deleteByPromoId(Integer id);
 }

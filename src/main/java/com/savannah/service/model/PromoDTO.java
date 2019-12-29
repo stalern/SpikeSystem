@@ -1,16 +1,19 @@
 package com.savannah.service.model;
 
+import com.savannah.util.validator.TimeReasonable;
 import org.joda.time.DateTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author stalern
  * @date 2019/12/17~19:44
  */
+@TimeReasonable(message = "活动结束时间必须晚于开始时间")
 public class PromoDTO {
     private Integer id;
 
@@ -92,5 +95,11 @@ public class PromoDTO {
 
     public boolean isNow() {
         return startDate.isBeforeNow() && endDate.isAfterNow();
+    }
+    public boolean timeRight() {
+        return endDate.isBefore(startDate);
+    }
+    public boolean beforeNow() {
+        return timeRight() && endDate.isBeforeNow();
     }
 }

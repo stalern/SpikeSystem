@@ -3,6 +3,7 @@ package com.savannah.entity;
 import org.joda.time.DateTime;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author MybatisGenerator
@@ -53,6 +54,26 @@ public class PromoInfoDO {
         DateTime start = new DateTime(startDate);
         DateTime end = new DateTime(endDate);
         return start.isBeforeNow() && end.isAfterNow();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PromoInfoDO that = (PromoInfoDO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(promoName, that.promoName) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, promoName, startDate, endDate);
     }
 
     @Override

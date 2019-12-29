@@ -1,6 +1,6 @@
 package com.savannah.service;
 
-import com.savannah.controller.vo.MyPage;
+import com.savannah.error.ReturnException;
 import com.savannah.service.model.PromoDTO;
 
 import java.util.List;
@@ -30,4 +30,25 @@ public interface PromoService {
      * @return promoList
      */
     List<PromoDTO> listPromoNow();
+
+    /**
+     * 创建活动
+     * @param promoDTO 包括活动中的商品
+     * @return promoDTO
+     */
+    PromoDTO createPromo(PromoDTO promoDTO);
+
+    /**
+     * 更新活动
+     * @param promoDTO 包括活动中的商品
+     * @return promoDTO
+     * @throws ReturnException 活动不存在
+     */
+    PromoDTO updatePromo(PromoDTO promoDTO) throws ReturnException;
+
+    /**
+     * 删除活动
+     * @param promoId 活动id
+     */
+    void deletePromo(Integer promoId) throws ReturnException;
 }

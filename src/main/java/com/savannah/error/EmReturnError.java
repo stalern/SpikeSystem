@@ -35,7 +35,8 @@ public enum EmReturnError implements ReturnError {
      * 30000开头为活动相关
      */
     PROMO_EXIST_ERROR(30001, "活动出现异常"),
-    PROMO_NOT_EXIT(30002, "活动不存在");
+    PROMO_NOT_EXIT(30002, "活动不存在"),
+    PROMO_TIME_ERROR(30003, "活动时间错误");
 
 
     private int errCode;

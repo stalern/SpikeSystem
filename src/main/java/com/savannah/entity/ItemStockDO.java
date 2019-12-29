@@ -1,5 +1,7 @@
 package com.savannah.entity;
 
+import java.util.Objects;
+
 /**
  * @author MybatisGenerator
  * @date 2019年12月9日17:18:29
@@ -42,5 +44,24 @@ public class ItemStockDO {
                 ", stock=" + stock +
                 ", itemId=" + itemId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemStockDO that = (ItemStockDO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(stock, that.stock) &&
+                Objects.equals(itemId, that.itemId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, stock, itemId);
     }
 }

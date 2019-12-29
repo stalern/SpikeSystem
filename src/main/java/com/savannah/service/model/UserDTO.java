@@ -1,12 +1,8 @@
 package com.savannah.service.model;
 
 import com.savannah.controller.vo.ItemVO;
-import com.savannah.util.validator.IsEmail;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 /**
  * @author stalern
@@ -28,7 +24,7 @@ public class UserDTO {
     @Max(value = 150,message = "年龄必须小于150岁")
     private Byte age;
 
-    @IsEmail(message = "邮箱格式不符合")
+    @Email(message = "邮箱格式不符合")
     private String email;
 
     @NotBlank(message = "密码不能为空")

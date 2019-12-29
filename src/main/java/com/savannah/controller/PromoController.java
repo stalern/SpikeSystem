@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,11 @@ import java.util.List;
 @CrossOrigin(allowCredentials="true", allowedHeaders = "*")
 public class PromoController {
 
-    @Autowired
-    private PromoService promoService;
+    private final PromoService promoService;
+
+    public PromoController(PromoService promoService) {
+        this.promoService = promoService;
+    }
 
     /**
      * 得到单个活动
@@ -79,6 +83,46 @@ public class PromoController {
             }
         });
         return ReturnType.create(new PageInfo<>(promoVOList));
+    }
+
+    /**
+     * 创建一个秒杀活动
+     * @param promoDTO 可以加入参与活动的商品和价格
+     * @return promoVO
+     */
+    @PostMapping("/postPromo")
+    public ReturnType postPromo(PromoDTO promoDTO) throws ReturnException {
+        if (promoDTO.beforeNow()) {
+            throw new ReturnException(EmReturnError.PROMO_TIME_ERROR,"不能创建比现在更早的活动");
+        }
+        PromoVO promoVO = convertFromDTO(promoService.createPromo(promoDTO));
+        return ReturnType.create(promoVO);
+    }
+
+    /**
+     * 更新一个活动
+     * @param promoDTO 增加商品活动在这里
+     * @return promoVO
+     * @throws ReturnException 活动时间修改错误/活动不存在错误
+     */
+    @PutMapping("/updatePromo")
+    public ReturnType updatePromo(PromoDTO promoDTO) throws ReturnException {
+        if (promoDTO.beforeNow()) {
+            throw new ReturnException(EmReturnError.PROMO_TIME_ERROR,"不能修改为比现在更早的活动");
+        }
+        PromoVO promoVO = convertFromDTO(promoService.updatePromo(promoDTO));
+        return ReturnType.create(promoVO);
+    }
+
+    /**
+     * 删除一个活动
+     * @param id promoId
+     * @return ok
+     */
+    @DeleteMapping("/deletePromo/{id}")
+    public ReturnType deletePromo(@PathVariable Integer id) throws ReturnException {
+        promoService.deletePromo(id);
+        return ReturnType.create();
     }
 
     private PromoVO convertFromDTO(PromoDTO promoDTO) throws ReturnException {

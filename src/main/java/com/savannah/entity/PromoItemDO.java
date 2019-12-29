@@ -1,6 +1,7 @@
 package com.savannah.entity;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @author MybatisGenerator
@@ -56,5 +57,25 @@ public class PromoItemDO {
                 ", itemId=" + itemId +
                 ", promoItemPrice=" + promoItemPrice +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PromoItemDO that = (PromoItemDO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(promoId, that.promoId) &&
+                Objects.equals(itemId, that.itemId) &&
+                Objects.equals(promoItemPrice, that.promoItemPrice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, promoId, itemId, promoItemPrice);
     }
 }

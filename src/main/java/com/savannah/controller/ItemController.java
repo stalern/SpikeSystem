@@ -108,7 +108,7 @@ public class ItemController {
      * @return itemVO
      * @throws ReturnException 商品不存在异常
      */
-    @PostMapping("/updateItem")
+    @PutMapping("/updateItem")
     @Auth(Group.SELLER)
     public ReturnType updateItem(@RequestBody ItemDTO itemDTO) throws ReturnException {
         ItemVO itemVO = convertFromDTO(itemService.updateItem(itemDTO));

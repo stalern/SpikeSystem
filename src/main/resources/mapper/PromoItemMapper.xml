@@ -36,11 +36,48 @@
     delete from promo_item
     where item_id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByPromoId" parameterType="java.lang.Integer">
+    delete from promo_item
+    where promo_id = #{id,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.savannah.entity.PromoItemDO">
     insert into promo_item (id, promo_id, item_id, 
       promo_item_price)
     values (#{id,jdbcType=INTEGER}, #{promoId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, 
       #{promoItemPrice,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertListSelective" parameterType="com.savannah.entity.PromoItemDO">
+    insert into promo_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="promoId != null">
+        promo_id,
+      </if>
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="promoItemPrice != null">
+        promo_item_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <foreach collection="list">
+        <if test="id != null">
+          #{id,jdbcType=INTEGER},
+        </if>
+        <if test="promoId != null">
+          #{promoId,jdbcType=INTEGER},
+        </if>
+        <if test="itemId != null">
+          #{itemId,jdbcType=INTEGER},
+        </if>
+        <if test="promoItemPrice != null">
+          #{promoItemPrice,jdbcType=DECIMAL},
+        </if>
+      </foreach>
+    </trim>
   </insert>
   <insert id="insertSelective" parameterType="com.savannah.entity.PromoItemDO">
     insert into promo_item

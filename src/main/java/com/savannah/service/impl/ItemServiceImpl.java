@@ -6,12 +6,14 @@ import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.ItemService;
 import com.savannah.service.model.ItemDTO;
+import com.savannah.util.collection.EqualCollection;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -91,6 +93,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(rollbackFor = ReturnException.class)
     public ItemDTO updateItem(ItemDTO itemDTO) throws ReturnException {
         ItemDTO oldItemDTO = getItemById(itemDTO.getId());
         // 先校验新的DTO和原来的DTO有什么不同
@@ -98,26 +101,27 @@ public class ItemServiceImpl implements ItemService {
             throw new ReturnException(EmReturnError.ITEM_NOT_EXIT);
         }
         // 分类
-        boolean equalCategory = oldItemDTO.getCategoryIds().size() == itemDTO.getCategoryIds().size()
-                && oldItemDTO.getCategoryIds().containsAll(itemDTO.getCategoryIds());
-        if (!equalCategory) {
+        if (!EqualCollection.equalList(oldItemDTO.getCategoryIds(),itemDTO.getCategoryIds())) {
             List<ItemCategoryDO> itemCategoryDos = convertCategoryDoFromDto(itemDTO);
             itemCategoryMapper.deleteByItemId(itemDTO.getId());
             itemCategoryDos.forEach(itemCategoryMapper::insertSelective);
         }
         // 商品
         ItemInfoDO itemInfoDO = convertInfoDoFromDto(itemDTO);
-        itemInfoMapper.updateByPrimaryKeySelective(itemInfoDO);
+        if ( !itemInfoDO.equals(convertInfoDoFromDto(oldItemDTO))) {
+            itemInfoMapper.updateByPrimaryKeySelective(itemInfoDO);
+        }
         // 库存
         ItemStockDO itemStockDO = convertStockDoFromDto(itemDTO);
-        itemStockMapper.updateByItemIdSelective(itemStockDO);
+        if ( !itemStockDO.equals(convertStockDoFromDto(oldItemDTO))) {
+            itemStockMapper.updateByItemIdSelective(itemStockDO);
+        }
         // 活动
-        boolean equalPromo = oldItemDTO.getPromoId().equals(itemDTO.getPromoId())
-                && oldItemDTO.getPromoPrice().equals(itemDTO.getPromoPrice());
-        if (itemDTO.getPromoId() != null && !equalPromo) {
-            PromoItemDO promoItemDO = convertPromoDoFromDto(itemDTO);
+        PromoItemDO promoItemDO = convertPromoDoFromDto(itemDTO);
+        if (Objects.equals(promoItemDO,convertPromoDoFromDto(oldItemDTO))) {
             promoItemMapper.updateByItemIdSelective(promoItemDO);
         }
+
         return getItemById(itemDTO.getId());
     }
 

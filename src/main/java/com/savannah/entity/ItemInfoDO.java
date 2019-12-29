@@ -1,6 +1,7 @@
 package com.savannah.entity;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @author MybatisGenerator
@@ -77,5 +78,27 @@ public class ItemInfoDO {
                 ", sales=" + sales +
                 ", imgUrl='" + imgUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemInfoDO that = (ItemInfoDO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(sales, that.sales) &&
+                Objects.equals(imgUrl, that.imgUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, price, description, sales, imgUrl);
     }
 }
