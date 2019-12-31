@@ -10,7 +10,7 @@
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, number, create_by, modified_by, parent_id
+    id, name
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -18,16 +18,24 @@
     from category_info
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByName" parameterType="java.lang.String">
+    select id
+    from category_info
+    where name = #{name}
+  </select>
+  <select id="listCategoryInfo" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from category_info
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from category_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.savannah.entity.CategoryInfoDO">
-    insert into category_info (id, name, number, 
-      create_by, modified_by, parent_id
+    insert into category_info (id, name
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{number,jdbcType=TINYINT}, 
-      #{createBy,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=TIMESTAMP}, #{parentId,jdbcType=BIGINT}
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.savannah.entity.CategoryInfoDO">
@@ -39,18 +47,6 @@
       <if test="name != null">
         name,
       </if>
-      <if test="number != null">
-        number,
-      </if>
-      <if test="createBy != null">
-        create_by,
-      </if>
-      <if test="modifiedBy != null">
-        modified_by,
-      </if>
-      <if test="parentId != null">
-        parent_id,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -58,18 +54,6 @@
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="number != null">
-        #{number,jdbcType=TINYINT},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifiedBy != null">
-        #{modifiedBy,jdbcType=TIMESTAMP},
-      </if>
-      <if test="parentId != null">
-        #{parentId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -79,28 +63,12 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="number != null">
-        number = #{number,jdbcType=TINYINT},
-      </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifiedBy != null">
-        modified_by = #{modifiedBy,jdbcType=TIMESTAMP},
-      </if>
-      <if test="parentId != null">
-        parent_id = #{parentId,jdbcType=BIGINT},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.savannah.entity.CategoryInfoDO">
     update category_info
-    set name = #{name,jdbcType=VARCHAR},
-      number = #{number,jdbcType=TINYINT},
-      create_by = #{createBy,jdbcType=TIMESTAMP},
-      modified_by = #{modifiedBy,jdbcType=TIMESTAMP},
-      parent_id = #{parentId,jdbcType=BIGINT}
+    set name = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

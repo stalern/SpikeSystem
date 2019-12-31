@@ -3,6 +3,8 @@ package com.savannah.dao;
 import com.savannah.entity.CategoryInfoDO;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 分类信息
  * @author stalern
@@ -15,6 +17,11 @@ public interface CategoryInfoMapper {
 
     int insert(CategoryInfoDO record);
 
+    /**
+     * 插入分类信息
+     * @param record name
+     * @return 主键
+     */
     int insertSelective(CategoryInfoDO record);
 
     /**
@@ -27,4 +34,17 @@ public interface CategoryInfoMapper {
     int updateByPrimaryKeySelective(CategoryInfoDO record);
 
     int updateByPrimaryKey(CategoryInfoDO record);
+
+    /**
+     * 列出所有分类信息
+     * @return list
+     */
+    List<CategoryInfoDO> listCategoryInfo();
+
+    /**
+     * 通过分类名称拿到id
+     * @param name name
+     * @return id
+     */
+    Integer selectByName(String name);
 }

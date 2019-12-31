@@ -1,5 +1,7 @@
 package com.savannah.entity;
 
+import java.util.Objects;
+
 /**
  * 商品分类
  * @author stalern
@@ -32,5 +34,23 @@ public class CategoryInfoDO {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CategoryInfoDO that = (CategoryInfoDO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

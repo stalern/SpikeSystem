@@ -36,8 +36,11 @@ public enum EmReturnError implements ReturnError {
      */
     PROMO_EXIST_ERROR(30001, "活动出现异常"),
     PROMO_NOT_EXIT(30002, "活动不存在"),
-    PROMO_TIME_ERROR(30003, "活动时间错误");
+    PROMO_TIME_ERROR(30003, "活动时间错误"),
 
+    CATEGORY_EXIST_ERROR(40001,"分类出现异常"),
+    CATEGORY_CREATE_ERROR(40002,"分类创建异常"),
+    CATEGORY_DELETE_FAIL(40003,"分类删除失败");
 
     private int errCode;
     private String errMsg;

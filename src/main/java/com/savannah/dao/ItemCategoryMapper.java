@@ -42,4 +42,17 @@ public interface ItemCategoryMapper {
      * @param itemId 商品id
      */
     void deleteByItemId(Integer itemId);
+
+    /**
+     * 拿到分类的商品
+     * @param id categoryId
+     * @return list
+     */
+    List<ItemCategoryDO> selectByCategoryId(Integer id);
+
+    /**
+     * 删除该分类所具有的商品关联
+     * @param id categoryId
+     */
+    void deleteByCategoryId(Integer id);
 }
