@@ -17,7 +17,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.misc.BASE64Encoder;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -56,11 +61,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = ReturnException.class)
-    public void register(UserDTO userDTO) throws ReturnException {
+    public void register(UserDTO userDTO) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException {
         if (userDTO == null) {
             throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR);
         }
-
+        userDTO.setPwd(encodeByMd5(userDTO.getPwd()));
         UserInfoDO userInfoDO = convertInfoFromDTO(userDTO);
         try {
             userInfoMapper.insertSelective(userInfoDO);
@@ -75,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO validateLogin(String email, String pwd) throws ReturnException {
+    public UserDTO validateLogin(String email, String pwd) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException {
         UserInfoDO userInfoDO = userInfoMapper.selectByEmail(email);
         if (userInfoDO == null) {
             throw new ReturnException(EmReturnError.USER_LOGIN_FAIL);
@@ -83,7 +88,7 @@ public class UserServiceImpl implements UserService {
         UserPwdDO userPwdDO = userPwdMapper.selectByUserId(userInfoDO.getId());
         UserRoleDO userRoleDO = userRoleMapper.selectByUserId(userInfoDO.getId());
         UserDTO userDTO = convertFromDO(userInfoDO,userPwdDO,userRoleDO);
-        if (!StringUtils.equals(pwd, userDTO.getPwd())) {
+        if (!StringUtils.equals(encodeByMd5(pwd), userDTO.getPwd())) {
             throw new ReturnException(EmReturnError.USER_LOGIN_FAIL);
         }
         return userDTO;
@@ -128,5 +133,13 @@ public class UserServiceImpl implements UserService {
             userDTO.setRole(userRoleDO.getRole());
         }
         return userDTO;
+    }
+
+    public String encodeByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        //确定计算方法
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        BASE64Encoder base64en = new BASE64Encoder();
+        //加密字符串
+        return base64en.encode(md5.digest(str.getBytes(StandardCharsets.UTF_8)));
     }
 }

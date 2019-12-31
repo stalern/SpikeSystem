@@ -30,7 +30,7 @@ public interface CategoryService {
      * @param categoryDTO 包括分类商品
      * @return DTO
      */
-    CategoryDTO createCategory(CategoryDTO categoryDTO);
+    CategoryDTO createCategory(CategoryDTO categoryDTO) throws ReturnException;
 
     /**
      * 更新

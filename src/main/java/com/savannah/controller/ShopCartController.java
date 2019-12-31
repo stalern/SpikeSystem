@@ -4,18 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.savannah.controller.vo.ItemVO;
 import com.savannah.controller.vo.MyPage;
-import com.savannah.dao.UserItemMapper;
 import com.savannah.error.ReturnException;
 import com.savannah.response.ReturnType;
 import com.savannah.service.ItemService;
-import com.savannah.service.model.ItemDTO;
 import com.savannah.service.model.UserDTO;
 import com.savannah.util.auth.Auth;
 import com.savannah.util.auth.Group;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.net.ssl.HandshakeCompletedEvent;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;

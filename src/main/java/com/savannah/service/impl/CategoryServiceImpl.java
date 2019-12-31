@@ -5,11 +5,13 @@ import com.savannah.dao.ItemCategoryMapper;
 import com.savannah.entity.CategoryInfoDO;
 import com.savannah.entity.ItemCategoryDO;
 import com.savannah.error.EmReturnError;
+import com.savannah.error.ReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.CategoryService;
 import com.savannah.service.model.CategoryDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,9 +49,13 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDTOList;
     }
     @Override
-    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) throws ReturnException {
         CategoryInfoDO categoryInfoDO = convertInfoFromDTO(categoryDTO);
-        categoryInfoMapper.insertSelective(categoryInfoDO);
+        try {
+            categoryInfoMapper.insertSelective(categoryInfoDO);
+        } catch (DuplicateKeyException e) {
+            throw new ReturnException(EmReturnError.CATEGORY_EXIST_ERROR, "该分类名称已经存在");
+        }
         categoryDTO.setId(categoryInfoDO.getId());
         if (CollectionUtils.isEmpty(categoryDTO.getItemIds())) {
             List<ItemCategoryDO> itemCategoryDO = convertItemFromDTO(categoryDTO);

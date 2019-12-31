@@ -1,15 +1,9 @@
 package com.savannah.service.model;
 
-import com.savannah.controller.vo.ItemVO;
-import com.savannah.error.EmReturnError;
-import com.savannah.error.ReturnException;
-import org.springframework.beans.BeanUtils;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

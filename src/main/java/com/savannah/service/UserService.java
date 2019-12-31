@@ -4,6 +4,8 @@ import com.savannah.controller.vo.MyPage;
 import com.savannah.error.ReturnException;
 import com.savannah.service.model.UserDTO;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -30,7 +32,7 @@ public interface UserService {
      * @param userDTO 用户信息
      * @throws ReturnException NPE参数异常
      */
-    void register(UserDTO userDTO) throws ReturnException;
+    void register(UserDTO userDTO) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException;
 
     /**
      * 核实登录
@@ -39,5 +41,5 @@ public interface UserService {
      * @return UserDTO
      * @throws ReturnException 账号或密码错误
      */
-    UserDTO validateLogin(String email, String pwd) throws ReturnException;
+    UserDTO validateLogin(String email, String pwd) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException;
 }

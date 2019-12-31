@@ -20,7 +20,7 @@ public class UserDTO {
     private Byte gender;
 
     @NotNull(message = "年龄不能不填写")
-    @Min(value = 0,message = "年龄必须大于0岁")
+    @Min(value = 1,message = "年龄必须大于0岁")
     @Max(value = 150,message = "年龄必须小于150岁")
     private Byte age;
 

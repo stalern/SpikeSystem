@@ -33,6 +33,15 @@ public class CategoryController {
     }
 
     /**
+     * 获取分类详细信息
+     * @param id id
+     * @return DTO
+     */
+    @GetMapping("/get/{id}")
+    public ReturnType getCategory(@PathVariable Integer id) {
+        return ReturnType.create(categoryService.getCategoryById(id));
+    }
+    /**
      * 列出分类
      * @param page 页数
      * @return list

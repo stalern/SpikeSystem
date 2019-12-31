@@ -18,6 +18,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -82,7 +85,7 @@ public class UserController {
      * @throws ReturnException 用户名不存在或密码错误
      */
     @PostMapping("/login")
-    public ReturnType login(@IsEmail String email, String pwd) throws ReturnException {
+    public ReturnType login(@IsEmail String email, String pwd) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         // 入参校验
         if(StringUtils.isEmpty(email)|| StringUtils.isEmpty(email)){
@@ -128,7 +131,7 @@ public class UserController {
      * @throws ReturnException 返回异常
      */
     @PostMapping("/register/{otpCode}")
-    public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode, @RequestParam("plus")String plus) throws ReturnException {
+    public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode, @RequestParam("plus")String plus) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(userDTO.getEmail());
         if (! StringUtils.equals(optCode, inSessionOtpCode)){
