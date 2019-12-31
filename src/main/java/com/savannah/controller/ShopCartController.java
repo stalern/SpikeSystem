@@ -45,7 +45,7 @@ public class ShopCartController {
     @GetMapping("/getItem")
     @Auth(Group.BUYER)
     public ReturnType getShopCart(MyPage myPage) {
-        UserDTO userDTO = (UserDTO)request.getSession().getAttribute(Constant.LOGIN_USER);
+        UserDTO userDTO = (UserDTO)request.getSession().getAttribute(request.getHeader(Constant.X_REAL_IP));
         List<ItemVO> itemVO = new ArrayList<>();
         PageHelper.startPage(myPage.getPage(), myPage.getSize());
         itemService.listItemByUser(userDTO.getId()).forEach(e->{
@@ -66,7 +66,7 @@ public class ShopCartController {
     @PostMapping("/postItemUser/{itemId}")
     @Auth(Group.BUYER)
     public ReturnType postShopCart(@PathVariable Integer itemId) {
-        UserDTO userDTO = (UserDTO)request.getSession().getAttribute(Constant.LOGIN_USER);
+        UserDTO userDTO = (UserDTO)request.getSession().getAttribute(request.getHeader(Constant.X_REAL_IP));
         itemService.createUserItem(userDTO.getId(),itemId);
         return ReturnType.create();
     }
@@ -78,7 +78,7 @@ public class ShopCartController {
      */
     @DeleteMapping("/deleteItemUser/{itemId}")
     public ReturnType deleteShopCart(@PathVariable Integer itemId) {
-        UserDTO userDTO = (UserDTO)request.getSession().getAttribute(Constant.LOGIN_USER);
+        UserDTO userDTO = (UserDTO)request.getSession().getAttribute(request.getHeader(Constant.X_REAL_IP));
         itemService.deleteUserItem(userDTO.getId(),itemId);
         return ReturnType.create();
     }

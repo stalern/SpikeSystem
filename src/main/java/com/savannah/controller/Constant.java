@@ -8,6 +8,5 @@ package com.savannah.controller;
 public interface Constant {
     String ADMIN_ROLE = "王石博真帅";
     String SELLER_ROLE = "姜老师是好老师";
-    String IS_LOGIN = "IS_LOGIN";
-    String LOGIN_USER = "LOGIN_USER";
+    String X_REAL_IP = "x-real-ip";
 }

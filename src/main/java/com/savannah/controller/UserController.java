@@ -95,8 +95,7 @@ public class UserController {
         // 用户登陆服务,用来校验用户登陆是否合法
         UserDTO userDTO = userService.validateLogin(email,pwd);
         //将登陆凭证加入到用户登陆成功的session内
-        this.httpServletRequest.getSession().setAttribute(Constant.IS_LOGIN,true);
-        this.httpServletRequest.getSession().setAttribute(Constant.LOGIN_USER,userDTO);
+        this.httpServletRequest.getSession().setAttribute(httpServletRequest.getHeader(Constant.X_REAL_IP), userDTO);
 
         return ReturnType.create(convertFromDTO(userDTO));
     }
@@ -154,8 +153,7 @@ public class UserController {
      */
     @GetMapping("/logout")
     public ReturnType logout() {
-        this.httpServletRequest.getSession().setAttribute(Constant.IS_LOGIN, false);
-        this.httpServletRequest.getSession().setAttribute(Constant.LOGIN_USER, null);
+        this.httpServletRequest.getSession().setAttribute(httpServletRequest.getHeader(Constant.X_REAL_IP), null);
         return ReturnType.create();
     }
 

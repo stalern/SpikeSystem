@@ -40,14 +40,11 @@ public class OrderController {
     @PostMapping("/buy")
     @Auth(Group.BUYER)
     public ReturnType postOrder(@RequestBody OrderDTO orderDTO) throws ReturnException {
-        // if或许可以取消
-        if (httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN) == null || !(Boolean)httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN)) {
-            throw new ReturnException(EmReturnError.USER_NOT_LOGIN);
-        } else {
-            UserDTO userDTO = (UserDTO) httpServletRequest.getSession().getAttribute(Constant.LOGIN_USER);
-            orderDTO.setUserId(userDTO.getId());
-            orderService.createOrder(orderDTO);
-        }
+        
+        UserDTO userDTO = (UserDTO) httpServletRequest.getSession().getAttribute(httpServletRequest.getHeader(Constant.X_REAL_IP));
+        orderDTO.setUserId(userDTO.getId());
+        orderService.createOrder(orderDTO);
+        
         return ReturnType.create();
     }
 
@@ -58,11 +55,8 @@ public class OrderController {
      */
     @GetMapping("/listByUser")
     @Auth(Group.BUYER)
-    public ReturnType listOrderByUser(MyPage myPage) throws ReturnException {
-        if (httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN) == null || !(Boolean)httpServletRequest.getSession().getAttribute(Constant.IS_LOGIN)) {
-            throw new ReturnException(EmReturnError.USER_NOT_LOGIN);
-        }
-        UserDTO userDTO = (UserDTO) httpServletRequest.getSession().getAttribute(Constant.LOGIN_USER);
+    public ReturnType listOrderByUser(MyPage myPage) {
+        UserDTO userDTO = (UserDTO) httpServletRequest.getSession().getAttribute(httpServletRequest.getHeader(Constant.X_REAL_IP));
         return ReturnType.create(new PageInfo<>(orderService.listOrderByUser(userDTO.getId(),myPage)));
     }
 

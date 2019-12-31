@@ -31,6 +31,8 @@ public interface UserService {
      * 用户注册
      * @param userDTO 用户信息
      * @throws ReturnException NPE参数异常
+     * @throws UnsupportedEncodingException 加密异常
+     * @throws NoSuchAlgorithmException 加密异常
      */
     void register(UserDTO userDTO) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException;
 
@@ -40,6 +42,8 @@ public interface UserService {
      * @param pwd 未加密密码
      * @return UserDTO
      * @throws ReturnException 账号或密码错误
+     * @throws UnsupportedEncodingException 加密异常
+     * @throws NoSuchAlgorithmException 加密异常
      */
     UserDTO validateLogin(String email, String pwd) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException;
 }
