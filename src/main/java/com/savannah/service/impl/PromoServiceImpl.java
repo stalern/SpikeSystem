@@ -9,7 +9,9 @@ import com.savannah.error.ReturnException;
 import com.savannah.service.PromoService;
 import com.savannah.service.model.PromoDTO;
 import com.savannah.util.collection.EqualCollection;
+import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,13 +65,18 @@ public class PromoServiceImpl implements PromoService {
     }
 
     @Override
-    public PromoDTO createPromo(PromoDTO promoDTO) {
+    @Transactional(rollbackFor = ReturnException.class)
+    public PromoDTO createPromo(PromoDTO promoDTO) throws ReturnException {
         PromoInfoDO promoInfoDO = convertInfoDoFromDTO(promoDTO);
         promoInfoMapper.insertSelective(promoInfoDO);
         promoDTO.setId(promoInfoDO.getId());
         if (promoDTO.getPromoPrice() != null) {
             List<PromoItemDO> promoItemDOList = convertItemDoFromDTO(promoDTO);
-            promoItemMapper.insertListSelective(promoItemDOList);
+            try {
+                promoItemDOList.forEach(promoItemMapper::insertSelective);
+            } catch (DataAccessException ex) {
+                throw new ReturnException(EmReturnError.PROMO_EXIST_ERROR,"一个商品只能参加一个活动");
+            }
         }
         return getPromoById(promoDTO.getId());
     }
@@ -90,7 +97,11 @@ public class PromoServiceImpl implements PromoService {
         if (!EqualCollection.equalMap(promoDTO.getPromoPrice(), oldPromoDTO.getPromoPrice())) {
             List<PromoItemDO> promoItemDOList = convertItemDoFromDTO(promoDTO);
             promoItemMapper.deleteByPromoId(promoDTO.getId());
-            promoItemMapper.insertListSelective(promoItemDOList);
+            try {
+                promoItemDOList.forEach(promoItemMapper::insertSelective);
+            } catch (DataAccessException ex) {
+                throw new ReturnException(EmReturnError.PROMO_EXIST_ERROR,"一个商品只能参加一个活动");
+            }
         }
         return getPromoById(promoDTO.getId());
     }
@@ -105,11 +116,11 @@ public class PromoServiceImpl implements PromoService {
 
     private List<PromoItemDO> convertItemDoFromDTO(PromoDTO promoDTO) {
         List<PromoItemDO> promoItemDOList = new ArrayList<>();
-        PromoItemDO promoItemDO = new PromoItemDO();
         promoDTO.getPromoPrice().forEach((k,v) -> {
+            PromoItemDO promoItemDO = new PromoItemDO();
+            promoItemDO.setPromoId(promoDTO.getId());
             promoItemDO.setItemId(k);
             promoItemDO.setPromoItemPrice(v);
-            promoItemDO.setPromoId(promoDTO.getId());
             promoItemDOList.add(promoItemDO);
         });
         return promoItemDOList;
@@ -118,6 +129,8 @@ public class PromoServiceImpl implements PromoService {
     private PromoInfoDO convertInfoDoFromDTO(PromoDTO promoDTO) {
         PromoInfoDO promoInfoDO = new PromoInfoDO();
         BeanUtils.copyProperties(promoDTO,promoInfoDO);
+        promoInfoDO.setStartDate(promoDTO.getStartDate().toDate());
+        promoInfoDO.setEndDate(promoDTO.getEndDate().toDate());
         return promoInfoDO;
     }
 
@@ -127,9 +140,11 @@ public class PromoServiceImpl implements PromoService {
             return null;
         }
         BeanUtils.copyProperties(promoInfoDO, promoDTO);
+        promoDTO.setStartDate(new DateTime(promoInfoDO.getStartDate()));
+        promoDTO.setEndDate(new DateTime(promoInfoDO.getEndDate()));
         if (promoItemDO != null) {
             promoDTO.setPromoPrice(
-                    promoItemDO.stream().collect(Collectors.toMap(PromoItemDO::getId, PromoItemDO::getPromoItemPrice)));
+                    promoItemDO.stream().collect(Collectors.toMap(PromoItemDO::getItemId, PromoItemDO::getPromoItemPrice)));
         }
         return promoDTO;
     }

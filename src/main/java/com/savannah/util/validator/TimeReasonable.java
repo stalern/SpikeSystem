@@ -18,7 +18,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = CheckTimeValidator.class)
 @Documented
-@NotBlank
 public @interface TimeReasonable {
 
     String message() default "{com.savannah.util.validator.TimeReasonable.message}";

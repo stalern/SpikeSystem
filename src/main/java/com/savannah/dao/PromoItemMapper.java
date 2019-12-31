@@ -55,12 +55,6 @@ public interface PromoItemMapper {
     void deleteByItemId(Integer id);
 
     /**
-     * 插入列表
-     * @param promoItemDOList promoItemList
-     */
-    void insertListSelective(List<PromoItemDO> promoItemDOList);
-
-    /**
      * 删除
      * @param id promoId
      */

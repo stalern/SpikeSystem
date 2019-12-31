@@ -5,7 +5,6 @@ import com.savannah.dao.ItemCategoryMapper;
 import com.savannah.entity.CategoryInfoDO;
 import com.savannah.entity.ItemCategoryDO;
 import com.savannah.error.EmReturnError;
-import com.savannah.error.ReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.CategoryService;
 import com.savannah.service.model.CategoryDTO;
@@ -57,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ReturnException(EmReturnError.CATEGORY_EXIST_ERROR, "该分类名称已经存在");
         }
         categoryDTO.setId(categoryInfoDO.getId());
-        if (CollectionUtils.isEmpty(categoryDTO.getItemIds())) {
+        if (CollectionUtils.isNotEmpty(categoryDTO.getItemIds())) {
             List<ItemCategoryDO> itemCategoryDO = convertItemFromDTO(categoryDTO);
             itemCategoryDO.forEach(itemCategoryMapper::insertSelective);
         }
@@ -97,10 +96,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private List<ItemCategoryDO> convertItemFromDTO(CategoryDTO categoryDTO) {
-        ItemCategoryDO itemCategoryDO = new ItemCategoryDO();
         List<ItemCategoryDO> itemCategoryDOList = new ArrayList<>();
-        itemCategoryDO.setCategoryId(categoryDTO.getId());
         categoryDTO.getItemIds().forEach(e -> {
+            ItemCategoryDO itemCategoryDO = new ItemCategoryDO();
+            itemCategoryDO.setCategoryId(categoryDTO.getId());
             itemCategoryDO.setItemId(e);
             itemCategoryDOList.add(itemCategoryDO);
         });

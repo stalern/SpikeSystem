@@ -20,7 +20,7 @@
   </select>
   <select id="listItemByCategoryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
-    i1.id, title, price, description, sales, img_url
+    i1.*
     from item_info i1 join item_category i2 on i1.id = i2.item_id
     where i2.category_id = #{id,jdbcType=INTEGER}
   </select>

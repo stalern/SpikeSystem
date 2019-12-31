@@ -31,7 +31,7 @@
     values (#{id,jdbcType=INTEGER}, #{promoName,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, 
       #{endDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.entity.PromoInfoDO">
+  <insert id="insertSelective" parameterType="com.savannah.entity.PromoInfoDO" useGeneratedKeys="true" keyProperty="id">
     insert into promo_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

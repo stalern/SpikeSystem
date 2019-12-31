@@ -74,13 +74,13 @@ public class ItemServiceImpl implements ItemService {
         if (itemDTO == null) {
             throw new ReturnException(EmReturnError.ITEM_CAN_NOT_CREATE);
         }
-        // 分类
-        List<ItemCategoryDO> itemCategoryDos = convertCategoryDoFromDto(itemDTO);
-        itemCategoryDos.forEach(itemCategoryMapper::insertSelective);
         // 商品
         ItemInfoDO itemInfoDO = convertInfoDoFromDto(itemDTO);
         itemInfoMapper.insertSelective(itemInfoDO);
         itemDTO.setId(itemInfoDO.getId());
+        // 分类
+        List<ItemCategoryDO> itemCategoryDos = convertCategoryDoFromDto(itemDTO);
+        itemCategoryDos.forEach(itemCategoryMapper::insertSelective);
         // 库存
         ItemStockDO itemStockDO = convertStockDoFromDto(itemDTO);
         itemStockMapper.insertSelective(itemStockDO);
@@ -118,7 +118,7 @@ public class ItemServiceImpl implements ItemService {
         }
         // 活动
         PromoItemDO promoItemDO = convertPromoDoFromDto(itemDTO);
-        if (Objects.equals(promoItemDO,convertPromoDoFromDto(oldItemDTO))) {
+        if (!Objects.equals(promoItemDO,convertPromoDoFromDto(oldItemDTO))) {
             promoItemMapper.updateByItemIdSelective(promoItemDO);
         }
 
@@ -193,10 +193,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private List<ItemCategoryDO> convertCategoryDoFromDto(ItemDTO itemDTO) {
-        List<ItemCategoryDO> itemCategoryDos = new ArrayList<>(3);
-        ItemCategoryDO itemCategoryDO = new ItemCategoryDO();
-        itemCategoryDO.setItemId(itemDTO.getId());
+        List<ItemCategoryDO> itemCategoryDos = new ArrayList<>();
         itemDTO.getCategoryIds().forEach(e->{
+            ItemCategoryDO itemCategoryDO = new ItemCategoryDO();
+            itemCategoryDO.setItemId(itemDTO.getId());
             itemCategoryDO.setCategoryId(e);
             itemCategoryDos.add(itemCategoryDO);
         });

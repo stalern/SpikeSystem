@@ -19,6 +19,6 @@ public class CheckTimeValidator implements ConstraintValidator<TimeReasonable, P
       if (obj == null) {
          return false;
       }
-      return !obj.timeRight();
+      return obj.timeRight();
    }
 }

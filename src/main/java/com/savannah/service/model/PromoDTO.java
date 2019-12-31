@@ -1,5 +1,9 @@
 package com.savannah.service.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.savannah.config.CustomDateDeserializer;
+import com.savannah.config.CustomDateSerializer;
 import com.savannah.util.validator.TimeReasonable;
 import org.joda.time.DateTime;
 
@@ -26,12 +30,16 @@ public class PromoDTO {
      * 秒杀开始时间
      */
     @NotNull(message = "活动开始时间必须填写")
+    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonDeserialize(using = CustomDateDeserializer.class)
     private DateTime startDate;
 
     /**
      * 秒杀活动结束时间
      */
     @NotNull(message = "活动结束时间必须填写")
+    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonDeserialize(using = CustomDateDeserializer.class)
     private DateTime endDate;
 
     /**
@@ -96,7 +104,7 @@ public class PromoDTO {
         return startDate.isBeforeNow() && endDate.isAfterNow();
     }
     public boolean timeRight() {
-        return endDate.isBefore(startDate);
+        return endDate.isAfter(startDate);
     }
     public boolean beforeNow() {
         return timeRight() && endDate.isBeforeNow();

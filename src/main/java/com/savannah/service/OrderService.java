@@ -26,5 +26,5 @@ public interface OrderService {
      * @param myPage 分页
      * @return 用户集合
      */
-    List<OrderVO> listOrderByUser(Integer id, MyPage myPage);
+    List<OrderDTO> listOrderByUser(Integer id, MyPage myPage);
 }

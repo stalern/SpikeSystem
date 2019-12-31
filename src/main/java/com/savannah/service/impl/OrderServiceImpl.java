@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderVO> listOrderByUser(Integer id, MyPage myPage) {
+    public List<OrderDTO> listOrderByUser(Integer id, MyPage myPage) {
         PageHelper.startPage(myPage.getPage(),myPage.getSize());
         return orderInfoMapper.selectByUser(id);
     }

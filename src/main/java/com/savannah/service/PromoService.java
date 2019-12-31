@@ -36,7 +36,7 @@ public interface PromoService {
      * @param promoDTO 包括活动中的商品
      * @return promoDTO
      */
-    PromoDTO createPromo(PromoDTO promoDTO);
+    PromoDTO createPromo(PromoDTO promoDTO) throws ReturnException;
 
     /**
      * 更新活动

@@ -23,8 +23,7 @@
     where promo_id = #{promoId,jdbcType=INTEGER}
   </select>
   <select id="selectByItemId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
+    select distinct ptm.*
     from promo_item ptm, promo_info pin
     where ptm.item_id = #{itemId,jdbcType=INTEGER} and now() > pin.start_date and pin.end_date > now()
   </select>
@@ -45,39 +44,6 @@
       promo_item_price)
     values (#{id,jdbcType=INTEGER}, #{promoId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, 
       #{promoItemPrice,jdbcType=DECIMAL})
-  </insert>
-  <insert id="insertListSelective" parameterType="com.savannah.entity.PromoItemDO">
-    insert into promo_item
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="promoId != null">
-        promo_id,
-      </if>
-      <if test="itemId != null">
-        item_id,
-      </if>
-      <if test="promoItemPrice != null">
-        promo_item_price,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <foreach collection="list">
-        <if test="id != null">
-          #{id,jdbcType=INTEGER},
-        </if>
-        <if test="promoId != null">
-          #{promoId,jdbcType=INTEGER},
-        </if>
-        <if test="itemId != null">
-          #{itemId,jdbcType=INTEGER},
-        </if>
-        <if test="promoItemPrice != null">
-          #{promoItemPrice,jdbcType=DECIMAL},
-        </if>
-      </foreach>
-    </trim>
   </insert>
   <insert id="insertSelective" parameterType="com.savannah.entity.PromoItemDO">
     insert into promo_item
@@ -122,6 +88,7 @@
       <if test="promoItemPrice != null">
         promo_item_price = #{promoItemPrice,jdbcType=DECIMAL},
       </if>
+      id = #{id}
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -134,6 +101,7 @@
       <if test="promoItemPrice != null">
         promo_item_price = #{promoItemPrice,jdbcType=DECIMAL},
       </if>
+        item_id = #{itemId}
     </set>
     where item_id = #{itemId,jdbcType=INTEGER}
   </update>
@@ -141,7 +109,7 @@
     update promo_item
     set promo_id = #{promoId,jdbcType=INTEGER},
       item_id = #{itemId,jdbcType=INTEGER},
-      promo_item_price = #{promoItemPrice,jdbcType=DECIMAL},
+      promo_item_price = #{promoItemPrice,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -53,7 +53,7 @@ public interface ItemInfoMapper {
      * @param amount 数量
      * @return 影响的条目数，成功为1，失败为0
      */
-    @Update("update item_info set sales = #{amount} + sales where item_id = #{itemId}")
+    @Update("update item_info set sales = #{amount} + sales where id = #{itemId}")
     int increaseSales(Integer itemId, Integer amount);
 
     /**

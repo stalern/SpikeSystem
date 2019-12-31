@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -91,7 +92,8 @@ public class PromoController {
      * @return promoVO
      */
     @PostMapping("/postPromo")
-    public ReturnType postPromo(PromoDTO promoDTO) throws ReturnException {
+    @Auth(Group.SELLER)
+    public ReturnType postPromo(@RequestBody PromoDTO promoDTO) throws ReturnException {
         if (promoDTO.beforeNow()) {
             throw new ReturnException(EmReturnError.PROMO_TIME_ERROR,"不能创建比现在更早的活动");
         }
@@ -106,7 +108,8 @@ public class PromoController {
      * @throws ReturnException 活动时间修改错误/活动不存在错误
      */
     @PutMapping("/updatePromo")
-    public ReturnType updatePromo(PromoDTO promoDTO) throws ReturnException {
+    @Auth(Group.SELLER)
+    public ReturnType updatePromo(@RequestBody PromoDTO promoDTO) throws ReturnException {
         if (promoDTO.beforeNow()) {
             throw new ReturnException(EmReturnError.PROMO_TIME_ERROR,"不能修改为比现在更早的活动");
         }
@@ -120,6 +123,7 @@ public class PromoController {
      * @return ok
      */
     @DeleteMapping("/deletePromo/{id}")
+    @Auth(Group.SELLER)
     public ReturnType deletePromo(@PathVariable Integer id) throws ReturnException {
         promoService.deletePromo(id);
         return ReturnType.create();
@@ -131,6 +135,8 @@ public class PromoController {
         }
         PromoVO promoVO = new PromoVO();
         BeanUtils.copyProperties(promoDTO, promoVO);
+        promoVO.setStartDate(promoDTO.getStartDate());
+        promoVO.setEndDate(promoDTO.getEndDate());
         promoVO.setItemIds(new ArrayList<>(promoDTO.getPromoPrice().keySet()));
         return promoVO;
     }

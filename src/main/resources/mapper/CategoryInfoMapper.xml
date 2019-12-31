@@ -12,7 +12,7 @@
   <sql id="Base_Column_List">
     id, name
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from category_info
@@ -23,12 +23,12 @@
     from category_info
     where name = #{name}
   </select>
-  <select id="listCategoryInfo" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="listCategoryInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from category_info
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from category_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
@@ -38,7 +38,7 @@
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.savannah.entity.CategoryInfoDO">
+  <insert id="insertSelective" parameterType="com.savannah.entity.CategoryInfoDO" useGeneratedKeys="true" keyProperty="id">
     insert into category_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

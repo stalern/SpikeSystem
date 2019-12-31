@@ -67,7 +67,7 @@ public class CategoryController {
      */
     @PostMapping("/create")
     @Auth(Group.SELLER)
-    public ReturnType postCategory(CategoryDTO categoryDTO) throws ReturnException {
+    public ReturnType postCategory(@RequestBody CategoryDTO categoryDTO) throws ReturnException {
         CategoryVO categoryVO = convertFromDTO(categoryService.createCategory(categoryDTO));
         return ReturnType.create(categoryVO);
     }
@@ -80,7 +80,7 @@ public class CategoryController {
      */
     @PutMapping("/update")
     @Auth(Group.SELLER)
-    public ReturnType updateCategory(CategoryDTO categoryDTO) throws ReturnException {
+    public ReturnType updateCategory(@RequestBody CategoryDTO categoryDTO) throws ReturnException {
         CategoryVO categoryVO = convertFromDTO(categoryService.updateCategory(categoryDTO));
         return ReturnType.create(categoryVO);
     }
