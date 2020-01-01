@@ -92,4 +92,9 @@ public interface ItemService {
      * @param itemId itemId
      */
     void deleteUserItem(Integer id, Integer itemId);
+    /**
+     * 列出所有商品
+     * @return itemList
+     */
+    List<ItemDTO> listItem();
 }

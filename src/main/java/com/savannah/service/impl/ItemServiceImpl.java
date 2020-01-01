@@ -126,6 +126,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<ItemDTO> listItem() {
+        List<Integer> integerList = itemInfoMapper.listItemId();
+        List<ItemDTO> itemDTOList = new ArrayList<>();
+        integerList.forEach(e-> itemDTOList.add(getItemById(e)));
+        return itemDTOList;
+    }
+
+    @Override
     public List<ItemDTO> listItemByCategory(Integer id) {
         List<ItemInfoDO> itemInfoDOList = itemInfoMapper.listItemByCategoryId(id);
         List<ItemDTO> itemDTOList = new ArrayList<>();

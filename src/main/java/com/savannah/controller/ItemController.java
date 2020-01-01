@@ -51,6 +51,24 @@ public class ItemController {
         return ReturnType.create(convertFromDTO(itemService.getItemById(id)));
     }
     /**
+     * 列出所有商品
+     * @param myPage 分页时的页数
+     * @return itemVO
+     */
+    @GetMapping("/listItem")
+    public ReturnType listItem(MyPage myPage) {
+        List<ItemVO> itemVOList = new ArrayList<>();
+        PageHelper.startPage(myPage.getPage(),myPage.getSize());
+        itemService.listItem().forEach(e->{
+            try {
+                itemVOList.add(convertFromDTO(e));
+            } catch (ReturnException ex) {
+                ex.printStackTrace();
+            }
+        });
+        return ReturnType.create(new PageInfo<>(itemVOList));
+    }
+    /**
      * 通过分类id列出商品
      * @param id category_id
      * @param myPage 分页时的页数

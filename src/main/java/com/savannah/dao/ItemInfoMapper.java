@@ -2,6 +2,7 @@ package com.savannah.dao;
 
 import com.savannah.entity.ItemInfoDO;
 import com.savannah.service.model.ItemDTO;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -76,4 +77,11 @@ public interface ItemInfoMapper {
      * @return itemInfoList
      */
     List<ItemInfoDO> listItemByUserId(Integer id);
+
+    /**
+     * 列出商品id
+     * @return listId
+     */
+    @Select("select id from item_info")
+    List<Integer> listItemId();
 }
