@@ -1,18 +1,23 @@
 package com.savannah.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.savannah.controller.vo.MyPage;
-import com.savannah.error.EmReturnError;
+import com.savannah.controller.vo.OrderVO;
 import com.savannah.error.ReturnException;
 import com.savannah.response.ReturnType;
 import com.savannah.service.OrderService;
+import com.savannah.service.PromoService;
 import com.savannah.service.model.OrderDTO;
 import com.savannah.service.model.UserDTO;
 import com.savannah.util.auth.Auth;
 import com.savannah.util.auth.Group;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 下单即购买，没有取消订单
@@ -24,12 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin(allowCredentials="true", allowedHeaders = "*")
 public class OrderController {
 
+    private final PromoService promoService;
     private final HttpServletRequest httpServletRequest;
     private final OrderService orderService;
 
-    public OrderController(HttpServletRequest httpServletRequest, OrderService orderService) {
+    public OrderController(HttpServletRequest httpServletRequest, OrderService orderService, PromoService promoService) {
         this.httpServletRequest = httpServletRequest;
         this.orderService = orderService;
+        this.promoService = promoService;
     }
 
     /**
@@ -57,7 +64,19 @@ public class OrderController {
     @Auth(Group.BUYER)
     public ReturnType listOrderByUser(MyPage myPage) {
         UserDTO userDTO = (UserDTO) httpServletRequest.getSession().getAttribute(httpServletRequest.getHeader(Constant.X_REAL_IP));
-        return ReturnType.create(new PageInfo<>(orderService.listOrderByUser(userDTO.getId(),myPage)));
+        List<OrderVO> userVOList = new ArrayList<>();
+        PageHelper.startPage(myPage.getPage(),myPage.getSize());
+        orderService.listOrderByUser(userDTO.getId()).forEach(e-> userVOList.add(convertVoFromDTO(e)));
+        return ReturnType.create(new PageInfo<>(userVOList));
+    }
+
+    private OrderVO convertVoFromDTO(OrderDTO orderDTO) {
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orderDTO,orderVO);
+        if (orderDTO.getPromoId() != null && orderDTO.getPromoId() != -1) {
+            orderVO.setPromoName(promoService.getPromoById(orderDTO.getPromoId()).getPromoName());
+        }
+        return orderVO;
     }
 
 }

@@ -1,8 +1,6 @@
 package com.savannah.dao;
 
-import com.savannah.controller.vo.OrderVO;
 import com.savannah.entity.OrderInfoDO;
-import com.savannah.service.model.OrderDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,5 +33,5 @@ public interface OrderInfoMapper {
      * @param id 用户id
      * @return 订单
      */
-    List<OrderDTO> selectByUser(Integer id);
+    List<OrderInfoDO> selectByUser(Integer id);
 }

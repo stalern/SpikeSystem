@@ -23,8 +23,7 @@ public interface OrderService {
     /**
      * 列出某个用户历史订单
      * @param id 用户id
-     * @param myPage 分页
      * @return 用户集合
      */
-    List<OrderDTO> listOrderByUser(Integer id, MyPage myPage);
+    List<OrderDTO> listOrderByUser(Integer id);
 }

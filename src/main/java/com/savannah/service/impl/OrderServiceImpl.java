@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author stalern
@@ -52,11 +54,11 @@ public class OrderServiceImpl implements OrderService {
         }
         // 如果商品参加活动，则校验活动id是否适合该商品
         if (orderDTO.getPromoId() != null && orderDTO.getPromoId() != -1) {
-            if (itemDTO.getPromoId() == null || !orderDTO.getPromoId().equals(itemDTO.getPromoId())) {
+            if (!Objects.equals(orderDTO.getPromoId(),itemDTO.getPromoId())) {
                 throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR,"活动信息不正确");
-            } else {
-                orderDTO.setItemPrice(itemDTO.getPrice());
             }
+        } else {
+            orderDTO.setItemPrice(itemDTO.getPrice());
         }
         // 减少库存
         if (!itemService.decreaseStock(orderDTO.getItemId(),orderDTO.getAmount())){
@@ -72,9 +74,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> listOrderByUser(Integer id, MyPage myPage) {
-        PageHelper.startPage(myPage.getPage(),myPage.getSize());
-        return orderInfoMapper.selectByUser(id);
+    public List<OrderDTO> listOrderByUser(Integer id) {
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        orderInfoMapper.selectByUser(id).forEach(e->orderDTOList.add(convertDtoFromDO(e)));
+        return orderDTOList;
+    }
+
+    private OrderDTO convertDtoFromDO(OrderInfoDO orderInfoDO) {
+        OrderDTO orderDTO = new OrderDTO();
+        BeanUtils.copyProperties(orderInfoDO, orderDTO);
+        orderDTO.setItemPrice(orderInfoDO.getOrderPrice().
+                divide(BigDecimal.valueOf(orderInfoDO.getAmount()),4,BigDecimal.ROUND_HALF_EVEN));
+        return orderDTO;
     }
 
     private OrderInfoDO convertDoFromDto(OrderDTO orderDTO) {
