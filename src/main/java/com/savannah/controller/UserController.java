@@ -15,8 +15,10 @@ import com.savannah.util.validator.ValidationResult;
 import com.savannah.util.validator.ValidatorImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -33,6 +35,8 @@ import java.util.Random;
 @CrossOrigin(allowCredentials="true", allowedHeaders = "*")
 public class UserController {
 
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
     private final UserService userService;
     private final HttpServletRequest httpServletRequest;
     private final ValidatorImpl validator;
@@ -113,8 +117,8 @@ public class UserController {
         }
         Random random = new Random();
         String optCode = String.valueOf(random.nextInt(999999) + 1000);
-        // 使用HttpSession将opt和email关联
-        httpServletRequest.getSession().setAttribute(email, optCode);
+        // 使用redis将opt和email关联
+        redisTemplate.opsForValue().set(email,optCode);
         // 发送验证码给邮箱
         System.out.println(email + " " + optCode);
         return ReturnType.create();
@@ -131,7 +135,7 @@ public class UserController {
     @PostMapping("/register/{otpCode}")
     public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode, @RequestParam("plus")String plus) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
-        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(userDTO.getEmail());
+        String inSessionOtpCode = redisTemplate.opsForValue().get(userDTO.getEmail());
         if (! StringUtils.equals(optCode, inSessionOtpCode)){
             throw new ReturnException(EmReturnError.PARAMETER_VALIDATION_ERROR, "短信验证码不符合");
         }
