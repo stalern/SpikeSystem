@@ -15,10 +15,13 @@ import com.savannah.service.model.PromoDTO;
 import com.savannah.util.auth.Auth;
 import com.savannah.util.auth.Group;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 商品，购物车等
@@ -30,6 +33,8 @@ import java.util.List;
 @CrossOrigin(allowCredentials="true", allowedHeaders = "*")
 public class ItemController {
 
+    @Resource
+    RedisTemplate<String,ItemDTO> redisTemplate;
     private final ItemService itemService;
     private final CategoryService categoryService;
     private final PromoService promoService;
@@ -48,7 +53,14 @@ public class ItemController {
      */
     @GetMapping("/getItem/{id}")
     public ReturnType getItem(@PathVariable Integer id) throws ReturnException {
-        return ReturnType.create(convertFromDTO(itemService.getItemById(id)));
+        ItemDTO itemDTO = redisTemplate.opsForValue().get("item_" + id);
+        if (itemDTO == null) {
+            itemDTO = itemService.getItemById(id);
+            redisTemplate.opsForValue().set("item_" + id, itemDTO);
+            // 设置失效时间
+            redisTemplate.expire("item_" + id,10, TimeUnit.MINUTES);
+        }
+        return ReturnType.create(convertFromDTO(itemDTO));
     }
     /**
      * 列出所有商品
@@ -130,6 +142,8 @@ public class ItemController {
     @Auth(Group.SELLER)
     public ReturnType updateItem(@RequestBody ItemDTO itemDTO) throws ReturnException {
         ItemVO itemVO = convertFromDTO(itemService.updateItem(itemDTO));
+        // 更新redis中的值
+        redisTemplate.opsForValue().set("item_" + itemDTO.getId(), itemDTO);
         return ReturnType.create(itemVO);
     }
 

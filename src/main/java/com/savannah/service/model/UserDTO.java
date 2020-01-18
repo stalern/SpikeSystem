@@ -3,12 +3,13 @@ package com.savannah.service.model;
 import com.savannah.controller.vo.ItemVO;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 
 /**
  * @author stalern
  * @date 2019/12/09~21:36
  */
-public class UserDTO {
+public class UserDTO implements Serializable {
     private Integer id;
 
     @NotBlank(message = "用户名不能为空")

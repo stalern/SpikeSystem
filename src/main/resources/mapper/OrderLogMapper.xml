@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.savannah.dao.OrderLogMapper">
+  <resultMap id="BaseResultMap" type="com.savannah.entity.OrderLogDO">
+    <id column="order_log_id" jdbcType="VARCHAR" property="orderLogId" />
+    <result column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_log_id, item_id, amount, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_log
+    where order_log_id = #{orderLogId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from order_log
+    where order_log_id = #{orderLogId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.savannah.entity.OrderLogDO">
+    insert into order_log (order_log_id, item_id, amount, 
+      status)
+    values (#{orderLogId,jdbcType=VARCHAR}, #{itemId,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.savannah.entity.OrderLogDO">
+    insert into order_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderLogId != null">
+        order_log_id,
+      </if>
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderLogId != null">
+        #{orderLogId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.savannah.entity.OrderLogDO">
+    update order_log
+    <set>
+      <if test="itemId != null">
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where order_log_id = #{orderLogId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.savannah.entity.OrderLogDO">
+    update order_log
+    set item_id = #{itemId,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT}
+    where order_log_id = #{orderLogId,jdbcType=VARCHAR}
+  </update>
+</mapper>

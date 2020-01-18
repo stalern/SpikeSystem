@@ -21,6 +21,14 @@ public interface ItemService {
     boolean decreaseStock(Integer itemId, Integer amount);
 
     /**
+     * 减少Redis中的库存
+     * @param itemId 商品id
+     * @param amount 数量
+     * @return 成功为true，失败为false
+     */
+    boolean decreaseStockInCache(Integer itemId, Integer amount);
+
+    /**
      * 增加销量
      * @param itemId 商品id
      * @param amount 数量
@@ -34,6 +42,13 @@ public interface ItemService {
      * @return itemDTO
      */
     ItemDTO getItemById(Integer itemId);
+
+    /**
+     * 通过缓存拿到ItemDTO
+     * @param itemId itemId
+     * @return ItemDTO
+     */
+    ItemDTO getItemByIdInCache(Integer itemId);
 
     /**
      * 创建商品，商品活动价格和商品价格一样，要想不一样，需要修改

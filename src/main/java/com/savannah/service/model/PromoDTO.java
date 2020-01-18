@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * @date 2019/12/17~19:44
  */
 @TimeReasonable(message = "活动结束时间必须晚于开始时间")
-public class PromoDTO {
+public class PromoDTO implements Serializable {
     private Integer id;
 
     /**

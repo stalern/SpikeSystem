@@ -3,6 +3,7 @@ package com.savannah.service.model;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @author stalern
  * @date 2019/12/17~20:30
  */
-public class ItemDTO {
+public class ItemDTO implements Serializable {
     private Integer id;
 
     /**

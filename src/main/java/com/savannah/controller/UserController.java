@@ -133,7 +133,7 @@ public class UserController {
      * @throws ReturnException 返回异常
      */
     @PostMapping("/register/{otpCode}")
-    public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode, @RequestParam("plus")String plus) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public ReturnType register(@RequestBody UserDTO userDTO, @PathVariable("otpCode") String optCode, @RequestParam(value = "plus", required = false)String plus) throws ReturnException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         String inSessionOtpCode = redisTemplate.opsForValue().get(userDTO.getEmail());
         if (! StringUtils.equals(optCode, inSessionOtpCode)){

@@ -1,10 +1,9 @@
 package com.savannah.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.savannah.controller.vo.MyPage;
-import com.savannah.controller.vo.OrderVO;
 import com.savannah.dao.OrderInfoMapper;
+import com.savannah.dao.OrderLogMapper;
 import com.savannah.entity.OrderInfoDO;
+import com.savannah.entity.OrderLogDO;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
 import com.savannah.service.ItemService;
@@ -29,25 +28,29 @@ import java.util.Objects;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private final OrderLogMapper orderLogMapper;
     private final UserService userService;
     private final ItemService itemService;
     private final OrderInfoMapper orderInfoMapper;
 
-    public OrderServiceImpl(UserService userService, ItemService itemService, OrderInfoMapper orderInfoMapper) {
+    public OrderServiceImpl(UserService userService, ItemService itemService, OrderInfoMapper orderInfoMapper, OrderLogMapper orderLogMapper) {
         this.userService = userService;
         this.itemService = itemService;
         this.orderInfoMapper = orderInfoMapper;
+        this.orderLogMapper = orderLogMapper;
     }
 
     @Override
     @Transactional(rollbackFor = ReturnException.class)
-    public void createOrder(OrderDTO orderDTO) throws ReturnException {
+    public void createOrder(OrderDTO orderDTO, String orderLogId) throws ReturnException {
         // 校验下单商品是否存在
-        ItemDTO itemDTO = itemService.getItemById(orderDTO.getItemId());
+        ItemDTO itemDTO = itemService.getItemByIdInCache(orderDTO.getItemId()
+//        itemService.getItemById(orderDTO.getItemId()
+        );
         if (itemDTO == null) {
             throw new ReturnException(EmReturnError.ITEM_NOT_EXIT);
         }
-        // 校验用户是否存在
+        // 校验用户是否存在，改地方也需要放在缓存中
         UserDTO userDTO = userService.getUserById(orderDTO.getUserId());
         if (userDTO == null) {
             throw new ReturnException(EmReturnError.USER_NOT_EXIST);
@@ -61,7 +64,9 @@ public class OrderServiceImpl implements OrderService {
             orderDTO.setItemPrice(itemDTO.getPrice());
         }
         // 减少库存
-        if (!itemService.decreaseStock(orderDTO.getItemId(),orderDTO.getAmount())){
+        if (!itemService.decreaseStockInCache(orderDTO.getItemId(),orderDTO.getAmount())
+                //decreaseStock(orderDTO.getItemId(),orderDTO.getAmount())
+        ){
             throw new ReturnException(EmReturnError.STOCK_NOT_ENOUGH);
         }
         // 订单入库
@@ -71,6 +76,14 @@ public class OrderServiceImpl implements OrderService {
         if (!itemService.increaseSales(orderDTO.getItemId(),orderDTO.getAmount())){
             throw new ReturnException(EmReturnError.ITEM_NOT_EXIT,"销量增加错误");
         }
+
+        // 第五次优化，设置库存流水状态为成功
+        OrderLogDO orderLogDO = orderLogMapper.selectByPrimaryKey(orderLogId);
+        if (orderLogDO == null) {
+            throw new ReturnException(EmReturnError.UNKNOWN_ERROR, "库存流水不存在");
+        }
+        orderLogDO.setStatus((byte) 1);
+        orderLogMapper.updateByPrimaryKeySelective(orderLogDO);
     }
 
     @Override
@@ -78,6 +91,16 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> orderDTOList = new ArrayList<>();
         orderInfoMapper.selectByUser(id).forEach(e->orderDTOList.add(convertDtoFromDO(e)));
         return orderDTOList;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String initOrderLog(Integer itemId, Integer amount) {
+        OrderLogDO orderLogDO = new OrderLogDO();
+        orderLogDO.setItemId(itemId);
+        orderLogDO.setAmount(amount);
+        orderLogMapper.insertSelective(orderLogDO);
+        return orderLogDO.getOrderLogId();
     }
 
     private OrderDTO convertDtoFromDO(OrderInfoDO orderInfoDO) {

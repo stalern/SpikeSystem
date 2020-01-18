@@ -4,16 +4,20 @@ import com.savannah.dao.*;
 import com.savannah.entity.*;
 import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
+import com.savannah.mq.MqProducer;
 import com.savannah.service.ItemService;
 import com.savannah.service.model.ItemDTO;
 import com.savannah.util.collection.EqualCollection;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +27,14 @@ import java.util.stream.Collectors;
 @Service
 public class ItemServiceImpl implements ItemService {
 
+    @Resource
+    private RedisTemplate<String, ItemDTO> redisTemplate;
+    @Resource
+    private RedisTemplate<String, Integer> redisItemStock;
+    @Resource
+    private RedisTemplate<String, Boolean> redisItemInvalid;
+
+//    private final MqProducer producer;
     private final ItemInfoMapper itemInfoMapper;
     private final ItemStockMapper itemStockMapper;
     private final PromoItemMapper promoItemMapper;
@@ -30,12 +42,15 @@ public class ItemServiceImpl implements ItemService {
     private final UserItemMapper userItemMapper;
 
     public ItemServiceImpl(ItemInfoMapper itemInfoMapper, ItemStockMapper itemStockMapper,
-                           PromoItemMapper promoItemMapper, ItemCategoryMapper itemCategoryMapper, UserItemMapper userItemMapper) {
+                           PromoItemMapper promoItemMapper, ItemCategoryMapper itemCategoryMapper, UserItemMapper userItemMapper
+//            , MqProducer producer
+    ) {
         this.itemInfoMapper = itemInfoMapper;
         this.itemStockMapper = itemStockMapper;
         this.promoItemMapper = promoItemMapper;
         this.itemCategoryMapper = itemCategoryMapper;
         this.userItemMapper = userItemMapper;
+//        this.producer = producer;
     }
 
     @Override
@@ -43,6 +58,24 @@ public class ItemServiceImpl implements ItemService {
     public boolean decreaseStock(Integer itemId, Integer amount) {
         int affectRow = itemStockMapper.decreaseStock(itemId,amount);
         return affectRow > 0;
+    }
+
+    @Override
+    public boolean decreaseStockInCache(Integer itemId, Integer amount) {
+        long result = redisItemStock.opsForValue().decrement("item_stock_" + itemId, amount);
+        if (result >= 0
+//                && producer.asyncReduceStock(itemId, amount)
+//                此处不再需要，因为更新了事物异步下单
+        ) {
+            // 6次优化，打上库存售罄标识
+            if (result == 0) {
+                redisItemInvalid.opsForValue().set("item_stock_invalid" + itemId, true);
+            }
+            return true;
+        } else {
+            redisItemStock.opsForValue().increment("item_stock_" + itemId, amount);
+            return false;
+        }
     }
 
     @Override
@@ -69,6 +102,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public ItemDTO getItemByIdInCache(Integer itemId) {
+        ItemDTO itemDTO = redisTemplate.opsForValue().get("item_validate_" + itemId);
+        if (itemDTO == null) {
+            itemDTO = getItemById(itemId);
+            redisTemplate.opsForValue().set("item_validate_" + itemId, itemDTO);
+            redisTemplate.expire("item_validate_" + itemId, 10, TimeUnit.MINUTES);
+        }
+        return itemDTO;
+    }
+
+    @Override
     @Transactional(rollbackFor = ReturnException.class)
     public ItemDTO createItem(ItemDTO itemDTO) throws ReturnException {
         if (itemDTO == null) {
@@ -89,6 +133,8 @@ public class ItemServiceImpl implements ItemService {
             PromoItemDO promoItemDO = convertPromoDoFromDto(itemDTO);
             promoItemMapper.insertSelective(promoItemDO);
         }
+        // 把新增商品库存存入Redis
+        redisItemStock.opsForValue().set("item_stock_" + itemDTO.getId(), itemDTO.getStock());
         return getItemById(itemDTO.getId());
     }
 

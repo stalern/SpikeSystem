@@ -1,5 +1,6 @@
 package com.savannah.service.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
  * @author stalern
  * @date 2019/12/09~21:39
  */
-public class OrderDTO {
+public class OrderDTO implements Serializable {
     /**
      * 交易单号，具有明确意义
      */

@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.savannah.controller.vo.MyPage;
 import com.savannah.controller.vo.OrderVO;
+import com.savannah.error.EmReturnError;
 import com.savannah.error.ReturnException;
+import com.savannah.mq.MqProducer;
 import com.savannah.response.ReturnType;
 import com.savannah.service.OrderService;
 import com.savannah.service.PromoService;
@@ -13,8 +15,10 @@ import com.savannah.service.model.UserDTO;
 import com.savannah.util.auth.Auth;
 import com.savannah.util.auth.Group;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +33,19 @@ import java.util.List;
 @CrossOrigin(allowCredentials="true", allowedHeaders = "*")
 public class OrderController {
 
+    @Resource
+    RedisTemplate<String,Boolean> redisItemInvalid;
     private final PromoService promoService;
     private final HttpServletRequest httpServletRequest;
     private final OrderService orderService;
+    private final MqProducer mqProducer;
 
-    public OrderController(HttpServletRequest httpServletRequest, OrderService orderService, PromoService promoService) {
+    public OrderController(HttpServletRequest httpServletRequest, OrderService orderService,
+                           PromoService promoService, MqProducer mqProducer) {
         this.httpServletRequest = httpServletRequest;
         this.orderService = orderService;
         this.promoService = promoService;
+        this.mqProducer = mqProducer;
     }
 
     /**
@@ -50,8 +59,16 @@ public class OrderController {
         
         UserDTO userDTO = (UserDTO) httpServletRequest.getSession().getAttribute(httpServletRequest.getHeader(Constant.X_REAL_IP));
         orderDTO.setUserId(userDTO.getId());
-        orderService.createOrder(orderDTO);
-        
+        // 第六次优化，判断库存是否售罄，如果售罄，则直接返回下单失败
+        if (redisItemInvalid.hasKey("item_stock_" + orderDTO.getItemId())) {
+            throw new ReturnException(EmReturnError.STOCK_NOT_ENOUGH);
+        }
+//        第五次优化,先初始化库存流水。用于追踪异步构件库存的消息
+        String orderLogId = orderService.initOrderLog(orderDTO.getItemId(),orderDTO.getAmount());
+//        orderService.createOrder(orderDTO);
+        if (!mqProducer.transactionAsyncReduceStock(orderDTO,orderLogId)) {
+            throw new ReturnException(EmReturnError.UNKNOWN_ERROR, "下单失败");
+        }
         return ReturnType.create();
     }
 

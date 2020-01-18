@@ -1,6 +1,7 @@
 package com.savannah.service.model;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * @author stalern
  * @date 2019/12/24~08:38
  */
-public class CategoryDTO {
+public class CategoryDTO implements Serializable {
     private Integer id;
 
     @NotBlank(message = "分类名称不能为空")

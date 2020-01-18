@@ -56,16 +56,18 @@
 <!--        <table tableName="user_role"  domainObjectName="UserRole" enableCountByExample="false"-->
 <!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
 <!--               enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="category_info"  domainObjectName="CategoryInfo" enableCountByExample="false"
+<!--        <table tableName="category_info"  domainObjectName="CategoryInfo" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+<!--        <table tableName="item_category"  domainObjectName="ItemCategory" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+<!--        <table tableName="user_item"  domainObjectName="UserItem" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="order_log"  domainObjectName="OrderLog" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="item_category"  domainObjectName="ItemCategory" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="user_item"  domainObjectName="UserItem" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"></table>
-
 
     </context>
 </generatorConfiguration>

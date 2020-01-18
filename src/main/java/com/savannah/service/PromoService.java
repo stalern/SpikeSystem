@@ -35,6 +35,7 @@ public interface PromoService {
      * 创建活动
      * @param promoDTO 包括活动中的商品
      * @return promoDTO
+     * @throws ReturnException 主键重复异常
      */
     PromoDTO createPromo(PromoDTO promoDTO) throws ReturnException;
 
@@ -49,6 +50,7 @@ public interface PromoService {
     /**
      * 删除活动
      * @param promoId 活动id
+     * @throws ReturnException 删除商品失败
      */
     void deletePromo(Integer promoId) throws ReturnException;
 }

@@ -29,6 +29,7 @@ public interface CategoryService {
      * 创建分类
      * @param categoryDTO 包括分类商品
      * @return DTO
+     * @throws ReturnException 分类不存在
      */
     CategoryDTO createCategory(CategoryDTO categoryDTO) throws ReturnException;
 
@@ -36,12 +37,14 @@ public interface CategoryService {
      * 更新
      * @param categoryDTO 包括分类商品
      * @return VO
+     * @throws ReturnException 分类不存在
      */
     CategoryDTO updateCategory(CategoryDTO categoryDTO) throws ReturnException;
 
     /**
      * 删除分类
      * @param id 分类id
+     * @throws ReturnException 删除失败
      */
     void deleteCategory(Integer id) throws ReturnException;
 }

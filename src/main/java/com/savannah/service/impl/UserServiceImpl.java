@@ -17,12 +17,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -137,9 +135,7 @@ public class UserServiceImpl implements UserService {
 
     public String encodeByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //确定计算方法
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
-        BASE64Encoder base64en = new BASE64Encoder();
-        //加密字符串
-        return base64en.encode(md5.digest(str.getBytes(StandardCharsets.UTF_8)));
+        Base64.Encoder encoder = Base64.getEncoder();
+        return encoder.encodeToString(str.getBytes());
     }
 }
